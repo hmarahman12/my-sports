@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="./logo.png" />
+  <title>Cricket Live Match</title>
+  <link rel="icon" href="./img/favicon.ico">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+
+  <style>
+    /* Basic Reset and Themes */
+    .ip-match{
+      margin: auto;
+    }
+    .ip-match a img{
+      width: 100%;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; padding: 5px; transition: background 0.3s, color 0.3s; }
+    body.light { background: #f4f4f4; color: #000; }
+    body.dark { background: #121212; color: #fff; }
+
+    /* Top Bar */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 0 auto 20px; }
+    .logo img {
+      height: 40px;
+      border-radius: 2px;
+      border: 1px solid #ababab;
+      padding: 3px;
+    }
+
+    .search-container input {
+      width: 100%; padding: 8px; font-size: 16px;
+      border-radius: 5px; border: 1px solid #ccc;
+    }
+    .dark .search-container input { background: #222; border-color: #555; color: white; }
+
+    /* Notifications */
+    .notification-area { display: flex; align-items: center; position: relative; }
+    .bell-icon { font-size: 24px; cursor: pointer; position: relative; margin-right: 10px; }
+    .badge {
+      position: absolute; top: -5px; right: -8px;
+      background: red; color: white; border-radius: 50%;
+      font-size: 12px; padding: 2px 6px;
+    }
+
+    .notif-dropdown {
+      display: none; position: absolute; right: 0; top: 30px;
+      background: white; color: black; border: 1px solid #ccc;
+      border-radius: 8px; width: 250px; max-height: 300px;
+      overflow-y: auto; z-index: 1000;
+    }
+    .dark .notif-dropdown { background: #222; color: white; border-color: #444; }
+    .notif-dropdown ul { list-style: none; padding: 10px; }
+    .notif-dropdown li { padding: 5px 0; border-bottom: 1px solid #eee; }
+    .dark .notif-dropdown li { border-color: #444; }
+
+    .theme-toggle { cursor: pointer; font-size: 20px; }
+    /*****home screen******/
+    .match-result {
+      cursor: pointer;
+    }
+    .match-results .match-result {
+      position: relative;
+      margin: auto;
+      text-align: center;
+      border: 1px solid #a1a1a1;
+      color: #474747;
+      border-radius: 3px;
+      font-size: 10px;
+    }
+    .match-results .match-result .vs{
+      font-size: 10px;
+      font-family: unset;
+      font-weight: unset;
+    }
+
+    span.match-win {
+      color: black;
+      font-size: 12px;
+    }
+    span.match-win-date {
+      font-size: 10px;
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+    }
+    .adsContainer .itemse {
+    width: 100%;
+    height: 100%;
+    }
+    .slider-wrapper img {
+    width: 300px !important;
+    height: 100%;
+    object-fit: inherit;
+    }
+    .active {
+    display: unset !important;
+    }
+    .home-screen {
+      position: relative;
+      max-width: 700px;
+      margin: auto;
+      height: 393px;
+    }
+    .fullSceen {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ffffff;
+    top: 15%;
+    right: 8%;
+    cursor: pointer;
+    }
+    .home-screen iframe{
+      width: 100%;
+      height: 100%;
+    }
+    .sarvers {
+      display: flex;
+      height: 50px;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 3px;
+      border: 1px solid #878787;
+      border-radius: 3px;
+    }
+    span.playBTN img {
+      width: 60px;
+      height: 45px;
+    }
+    span.sarver img{
+      width: 50px;
+      height: 40px;
+    }
+    .sarvser-s1,.sarvser-s2 {
+      display: flex;
+      align-items: center;
+      color: black;
+    }
+    /* Post Items */
+    .items-head { max-width: 700px; margin: 95px auto; }
+    .play-button {
+      position: relative;
+    }
+    i#play-click {
+      font-size: 85px;
+      position: absolute;
+      cursor: pointer;
+    }
+    .items {
+      background: white; margin-bottom: 20px; padding: 15px;
+      border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .dark .items {
+      background: #1e1e1e; box-shadow: 0 2px 5px rgba(255,255,255,0.05);
+    }
+    .items-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+    iframe { width: 100%; height: 315px; border: none; border-radius: 6px; }
+
+    /* Download Buttons */
+    .button { display: flex; flex-direction: column; align-items: flex-end; font-size: 20px; }
+    .button a {
+      border: 1px solid rgb(27, 27, 27); margin: 5px; padding: 3px;
+      border-radius: 3px; background: #07a907; color: #fff; font-weight: bold;
+    }
+
+    /* Ad Slider */
+    .slider-wrapper {
+      position: relative; max-width: 300px; height: 80px;
+      margin: 10px auto; overflow: hidden; border-radius: 3px;
+    }
+    .adsContainer {
+      display: flex; flex-direction: row-reverse; height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+    .itemss { width: 300px; height: 80px}
+    .items img { width: 100%; height: 100%; object-fit: cover; }
+
+    .dots { text-align: center; margin-top: 10px; }
+    .promotionAds .dot {
+      width: 10px; height: 10px; display: inline-block;
+      margin: 5px; background: red; opacity: 0.5;
+      border-radius: 50%; cursor: pointer;
+    }
+    .dot .active { background: red; opacity: 1; }
+
+    .adstera, .adsterReffarl { height: 55px; text-align: center; margin-bottom: 10px; }
+    .adsterReffarl img { width: 250px !important; }
+  </style>
+
+  <style>
+  .scor-board {
+    border: 1px solid #838383;
+    border-radius: 3px;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .icons {
+    display: flex;
+    justify-content: space-around;
+    font-size: 50px;
+    position: fixed;
+    bottom: 8px;
+    width: 100%;
+    padding: 5px 2px;
+    background: #252525;
+    border-radius: 3px;
+    color: #fff;
+    bottom: 0;
+    left: 0;
+  }
+  i#home {
+    color: #fff;
+  }
+  img#match {
+    width: 55px;
+  }
+  .icons i,.icons img#match{
+    cursor: pointer;
+  }
+  img#playImgs {
+    width: 50px;
+    height: 30px;
+    position: absolute;
+    left: 17px;
+    top: 25px;
+  }
+  div#sarver1 {
+    margin: 7px 0;
+    cursor: pointer;
+  }
+  span.live-animation {
+    background: red;
+    color: #fff;
+    padding: 2px;
+    border-radius: 2px;
+  }
+  .min-sarver {
+    padding: 0 0 20px 0;
+    width: 100%;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    margin: 0 0 5px 3px;
+    background: #fff;
+    opacity: 1;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 18px var(--ring);
+    animation: pulse 1.4s infinite;
+  }
+  .min-Setting {
+    margin: auto;
+    width: auto;
+  }
+
+  .min-Setting span {
+    color: #838383;
+    background: #ededed;
+    display: block;
+    padding: 2px 2px 10px;
+    border-bottom: 1px solid #939393;
+  }
+  .cricket-id ,.account-type,.version{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .cricket-id span,.account-type span,.version span {
+    width: 60%;
+    border: none;
+  }
+  .profile-setting div,.more div,.abouts div {
+    margin: 5px;
+  }
+  span.active-date {
+    width: 20%;
+    font-size: 10px;
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  .match-list {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    text-align: center;
+  }
+  .match-list div {
+    display: inline;
+  }
+  .match-list div img {
+    width: 50px;
+    height: 60px;
+    border: 1px solid #959595;
+    border-radius: 2px;
+    margin: 5px;
+    cursor: pointer;
+  }
+
+  .all-match-list-dtls {
+    display: block !important;
+    width: auto;
+    margin: 10px auto;
+    border: 1px solid #919090;
+    border-radius: 3px;
+  }
+
+  .team-dtls {
+    display: block;
+  }
+
+  .all-match-list-dtls div {
+    display: block;
+  }
+
+  .team-dtls {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .team-dtls div {
+    display: inline;
+  }
+
+  .team-1,.team-2 {
+    font-size: 20px;
+    font-family: sans-serif;
+  }
+
+  .vs {
+    font-size: 30px;
+    font-family: system-ui;
+    font-weight: bolder;
+  }
+
+  .times {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-around;
+    color: #4d4d4d;
+  }
+
+  .tv-Channels {
+    padding: 0 0 100px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .tv-channel {
+    margin: 10px;
+  }
+  .tv-channel img {
+    border: 1px solid #bdbdbd;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100px;
+    height: 65px;
+  }
+
+  .scor-boards div.scor-board{
+    position: relative;
+  }
+  .teame1, .teame2 {
+    width: 60%;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bolder;
+}
+  .scor-board div.live {
+    background: red;
+    color: #fff;
+    padding: 3px 12px 3px 3px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-size: 10px;
+  }
+
+  .live div.dot {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+  }
+  .teame2 {
+    color: #515151;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.3); opacity: 0.6; }
+  }
+  @media only screen and (max-width: 600px){
+    .home-screen{
+      height: unset;
+    }
+    span.sarver,.items-title {
+    font-size: 15px;
+    }
+    i#play-click{
+      font-size: 50px;
+    }
+    img#playImgs {
+    width: 40px;
+    height: 30px;
+    left: 5px;
+    top: 10px;
+    }
+    .button{
+      font-size: 13px;
+    }
+  }
+  </style>
+
+  <style>
+    :root {
+      --bg: #000;
+      --btn-bg: rgba(255,255,255,0.08);
+      --btn-fg: #fff;
+      --accent: #06f;
+    }
+    html,body {
+      height: 100%;
+      margin: 0;
+      color: #fff;
+      -webkit-font-smoothing:antialiased;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* container that becomes fullscreen */
+    .player-wrap {
+      inset: 0;
+      place-items: center;
+      touch-action: manipulation;
+    }
+
+    /* responsive iframe that fills the container */
+    .player-iframe {
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      display: block;
+      max-width: none;
+      max-height: none;
+      background: #000;
+    }
+
+    /* overlay controls (enter/exit fullscreen) */
+    .controls {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      display: flex;
+      gap: 8px;
+      z-index: 10010;
+    }
+
+    .btn {
+      background: var(--btn-bg);
+      color: var(--btn-fg);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      cursor: pointer;
+    }
+
+    /* small note for user instructions (hidden when fullscreen) */
+    .note {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.45);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    /* landscape helper: rotate content if user physically rotated device but viewport didn't update */
+    @media (orientation: landscape) {
+      /* nothing needed — iframe already fills viewport */
+    }
+  </style>
+</head>
+
+<body class="light">
+
+  <div class="card" id="timerCard" aria-live="polite" style="display: none;">
+    <div class="head">
+      <div class="title"><span class="dot" aria-hidden="true"></span> 7 Days Free Trial</div>
+      <!-- <div class="muted" id="deadlineText">Target: <span></span></div> -->
+    </div>
+
+    <div class="grid" role="group" aria-label="Countdown time blocks">
+      <div class="unit" aria-label="Days left"><div class="value" id="days">0</div><div class="label">Days</div></div>
+      <div class="unit" aria-label="Hours left"><div class="value" id="hours">0</div><div class="label">Hours</div></div>
+      <div class="unit" aria-label="Minutes left"><div class="value" id="mins">0</div><div class="label">Minutes</div></div>
+      <div class="unit" aria-label="Seconds left"><div class="value" id="secs">0</div><div class="label">Seconds</div></div>
+    </div>
+
+    <div class="progress" aria-label="Overall progress">
+      <div class="bar" id="bar"></div>
+    </div>
+
+    <div class="done" id="doneMsg">Time's up! ✅</div>
+  </div>
+
+  <!-- Notification Sound -->
+  <audio id="notifSound" src="https://www.myinstants.com/media/sounds/notification.mp3" preload="auto"></audio>
+
+  <!-- Adsterra Ads -->
+  <div class="adsterReffarl adstera">
+    <a target="_blank" href="https://beta.publishers.adsterra.com/referral/6bRS6rSK1q" rel="nofollow">
+      <img src="https://landings-cdn.adsterratech.com/referralBanners/gif/468x60_adsterra_reff.gif" alt="banner" />
+    </a>
+  </div>
+  <div id="adstera" class="adstera" style="display: none;">
+    <script>
+      atOptions = {
+        'key': 'cf68736c3c1bc7dc0924bc043b0497a4',
+        'format': 'iframe',
+        'height': 50,
+        'width': 320,
+        'params': {}
+      };
+    </script>
+    <script src="//flaredishwater.com/cf68736c3c1bc7dc0924bc043b0497a4/invoke.js"></script>
+  </div>
+
+  <!-- RTL Ads Slider -->
+  <div class="promotionAds">
+    <div class="slider-wrapper"><div class="adsContainer"></div></div>
+    <div class="dots" id="dotsContainer"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="top-bar">
+    <div class="logo"><a href=""><img src="./img/Logo tsports.svg" alt="Logo"></a></div>
+    <div class="match-result">Match Result</div>
+    <div class="notification-area">
+      <span class="bell-icon" id="bell"><i class="fas fa-bell"></i><span class="badge" id="notifCount" style="display: none;">0</span></span>
+      <div class="notif-dropdown" id="notifDropdown">
+        <ul id="notifList"></ul>
+        <button class="clear-btn" onclick="clearNotifications()">Clear</button>
+      </div>
+      <span class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌓</span>
+    </div>
+  </div>
+
+     <!-- More Setting -->
+    <div class="min-Setting" style="display: none;">
+      <div class="profile-setting"> <span>Profile</span>
+        <div class="cricket-id"><span>cricket-id : </span> 4464646</div>
+        <div class="account-type" id="deadlineText"><span>Account : </span> Free Trial <span class="active-date"></span></div>
+        <div class="notifications">Notification</div>
+      </div>
+
+      <div class="more"> <span>More</span>
+        <div class="tickets">Tickets</div>
+        <div class="shop">Shop</div>
+      </div>
+
+      <div class="abouts"> <span>About</span>
+        <div class="terms-and-conditions">Terms & Conditions</div>
+        <div class="live-terms-and-conditions">Live Stream Terms & Conditions</div>
+        <div class="version"><span>Version : </span>10.25</div>
+      </div>
+    </div>
+
+    <!-- Every Match Results -->
+     <div class="match-results" style="display: none;">
+      
+     </div>
+    <!-- Scor Board -->
+    <div id="scor-boards1" class="scor-boards"></div>
+    <div id="scor-boards2" class="scor-boards"></div>
+    <div id="scor-boards3" class="scor-boards"></div>
+
+    <!----ip-match----->
+    <div class="ip-match"></div>
+      
+  <!----home screen----->
+  <div class="player-wrap home-screen" id="playerWrap">
+    <iframe sandbox="allow-scripts allow-same-origin allow-presentation" frameborder="0" height="100%" id="soop_player_video" src="https://vod.sooplive.co.kr/player/168766727/embed?showChat=false&amp;autoPlay=true&amp;mutePlay=true" width="100%" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="no-referrer-when-downgrade" loading="eager" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation" allowFullScreen></iframe>
+
+    <div class="min-sarver"></div>
+
+
+    <div class="tv-Channels">
+      
+    </div>
+  </div>
+  <!-- Posts -->
+  <div class="items-head" id="postsContainer" style="display: none;"></div>
+
+  <!-- match list -->
+   <div class="match-list" style="display: none;">
+    <div class="Match_lists">
+      <img id="t20" src="./img/t20.jpg" alt="">
+      <input type="text" value="t20" hidden>
+    </div>
+    <div class="Match_lists">
+      <img id="odi" src="./img/odi.webp" alt="">
+      <input type="text" value="odi" hidden>
+    </div>
+    <div id="ipl" class="Match_lists">
+      <img src="./img/ipl.png" alt="">
+      <input type="text" value="ipl" hidden>
+    </div>
+    <div id="bpl" class="Match_lists">
+      <img src="./img/bpl.png" alt="">
+      <input type="text" value="bpl" hidden>
+    </div>
+    <div id="league" class="Match_lists">
+      <img src="./img/league.jpg" alt="">
+      <input type="text" value="league" hidden>
+    </div>
+
+    <div class="all-match-list" style="display: none;">
+      
+    </div>
+   </div>
+
+
+
+
+
+  <div class="icons">
+    <a href=""><i id="home" class="fas fa-home"></i></a>
+    <img id="match" src="./img/match.png" alt="">
+    <i id="play" class="fas fa-play-circle"></i>
+    <i id="others" class="fa-solid fa-bars"></i>
+  </div>
+
+  <!-- Firebase App Logic -->
+  <script type="module">
+    function fullSceense(){
+      if(window.innerWidth <= 500){
+        document.querySelector(".player-wrap.home-screen").innerHTML += `
+        <div class="controls" id="controls">
+          <button class="btn" id="enterFs">Enter Fullscreen</button>
+          <button class="btn" id="exitFs" style="display:none">Exit Fullscreen</button>
+        </div>
+        <div class="note" id="note">Tip: rotate your phone to landscape, then tap "Enter Fullscreen".</div>
+        `;
+
+        (function () {
+          const playerWrap = document.getElementById('playerWrap');
+          const iframe = document.getElementById('soop_player_video');
+          const enterBtn = document.getElementById('enterFs');
+          const exitBtn = document.getElementById('exitFs');
+          const note = document.getElementById('note');
+
+          // Utility: are we in fullscreen?
+          function isFullscreen() {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+          }
+
+          // Try enter fullscreen on the wrapper (more browsers allow that)
+          async function enterFullscreen() {
+            // Some browsers (iOS Safari) don't support requestFullscreen on arbitrary elements.
+            try {
+              if (playerWrap.requestFullscreen) {
+                await playerWrap.requestFullscreen();
+              } else if (playerWrap.webkitRequestFullscreen) { // legacy WebKit
+                playerWrap.webkitRequestFullscreen();
+              } else if (playerWrap.msRequestFullscreen) {
+                playerWrap.msRequestFullscreen();
+              } else {
+                // last resort: open iframe in top (not recommended) or just expand visually
+                console.warn('Fullscreen API not supported; expanding to viewport only.');
+              }
+
+              // Try to lock orientation to landscape if allowed (must be in fullscreen and user gesture)
+              try {
+                if (screen.orientation && screen.orientation.lock) {
+                  await screen.orientation.lock('landscape').catch(e => {
+                    // ignored: many browsers disallow orientation lock
+                    console.warn('Orientation lock failed:', e);
+                  });
+                } else if (screen.lockOrientationUniversal) {
+                  // older API
+                  try { screen.lockOrientationUniversal('landscape'); } catch(e){ }
+                }
+              } catch (err) {
+                console.warn('Orientation lock error:', err);
+              }
+            } catch (err) {
+              console.error('enterFullscreen error:', err);
+            } finally {
+              updateControls();
+            }
+          }
+
+          async function exitFullscreen() {
+            try {
+              if (document.exitFullscreen) {
+                await document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+              } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+              }
+              // try unlocking orientation
+              try {
+                if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+              } catch (e) { /* ignore */ }
+            } catch (err) {
+              console.warn('exitFullscreen error:', err);
+            } finally {
+              updateControls();
+            }
+          }
+
+          function updateControls() {
+            if (isFullscreen()) {
+              enterBtn.style.display = 'none';
+              exitBtn.style.display = '';
+              note.style.display = 'none';
+            } else {
+              enterBtn.style.display = '';
+              exitBtn.style.display = 'none';
+              note.style.display = '';
+            }
+          }
+
+          // attempt to auto-enter fullscreen if user rotated to landscape and they previously pressed a button
+          window.addEventListener('orientationchange', () => {
+            // Update layout; try to auto fullscreen only if user is already permitted (some browsers block)
+            setTimeout(() => {
+              updateControls();
+              // if landscape and not fullscreen, we can prompt user visually or try a gentle request
+              if (window.matchMedia('(orientation: landscape)').matches && !isFullscreen()) {
+                note.textContent = 'Now in landscape — tap "Enter Fullscreen" for immersive view.';
+                note.style.display = '';
+              }
+            }, 300);
+          });
+
+          // show hint for mobile
+          function isMobile() {
+            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+          }
+
+          if (!isMobile()) {
+            note.textContent = 'Click "Enter Fullscreen" for fullscreen on desktop.';
+          }
+
+          enterBtn.addEventListener('click', async () => {
+            // user gesture: good time to request fullscreen + orientation lock
+            await enterFullscreen();
+          });
+
+          exitBtn.addEventListener('click', async () => {
+            await exitFullscreen();
+          });
+
+          // update control state on fullscreenchange
+          document.addEventListener('fullscreenchange', updateControls);
+          document.addEventListener('webkitfullscreenchange', updateControls);
+          document.addEventListener('msfullscreenchange', updateControls);
+
+          // When iframe content resizes / loads, ensure it fills viewport
+          iframe.addEventListener('load', () => {
+            // if iframe's content is a video player, sometimes browsers provide their own fullscreen controls.
+            // nothing special needed here; keep iframe styled to fill viewport.
+            updateControls();
+          });
+
+          // Accessibility: allow double-tap on iframe area to toggle fullscreen (user gesture)
+          let lastTap = 0;
+          playerWrap.addEventListener('touchend', async (e) => {
+            const now = Date.now();
+            if (now - lastTap < 300) {
+              // double-tap detected
+              if (!isFullscreen()) await enterFullscreen();
+              else await exitFullscreen();
+            }
+            lastTap = now;
+          });
+          updateControls();
+        })();
+      }
+    }fullSceense();
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, onValue, get, child, set} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCbLKuJsZ9du9hHBTUU5gfzN0Jxe7EQiXE",
+      authDomain: "live-cricket-47611.firebaseapp.com",
+      databaseURL: "https://live-cricket-47611-default-rtdb.firebaseio.com",
+      projectId: "live-cricket-47611",
+      storageBucket: "live-cricket-47611.firebasestorage.app",
+      messagingSenderId: "20357197788",
+      appId: "1:20357197788:web:e62f1d7d59b0129446e919",
+      measurementId: "G-R0P9EJ1KDJ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const postsContainer = document.getElementById("postsContainer");
+    const notifSound = document.getElementById("notifSound");
+    const notifBadge = document.getElementById("notifCount");
+    const notifDropdown = document.getElementById("notifDropdown");
+    const notifList = document.getElementById("notifList");
+
+    const theme = localStorage.getItem("theme");
+    if (theme == 'dark') {
+      document.querySelector('body').classList.toggle('dark')
+    }
+
+    const LAST_SEEN_KEY = 'lastSeenPostTitle';
+    const NOTIF_LIST_KEY = 'notifList';
+    const NOTIF_COUNT_KEY = 'notifCount';
+    let cachedPosts = [];
+    let initialLoad = true;
+
+    function loadPosts() {
+      onValue(ref(db, 'posts/'), (snapshot) => {
+        const posts = snapshot.val();
+        if (!posts) {
+          postsContainer.innerHTML = '<p>No Video Available.</p>';
+          return;
+        }
+
+        const newPosts = Object.values(posts).reverse();
+        const latestPost = newPosts[0];
+        if (!initialLoad && latestPost.title !== localStorage.getItem(LAST_SEEN_KEY)) {
+          notifSound.play();
+          showNotification(latestPost.title);
+          saveNotification(latestPost.title);
+          updateNotifDropdown();
+          updateNotifCount();
+          localStorage.setItem(LAST_SEEN_KEY, latestPost.title);
+        }
+
+        cachedPosts = newPosts;
+        displayPosts(newPosts);
+
+        if (initialLoad) {
+          localStorage.setItem(LAST_SEEN_KEY, latestPost.title);
+          initialLoad = false;
+        }
+      });
+    }
+
+    //live streaming///
+  function Live_Streaming() {
+  // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+  
+    const dbRef = ref(db);
+    get(child(dbRef, 'live/'))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const allValues = snapshot.val();
+          // Example: Loop through all posts and print titles
+          document.querySelector(".min-sarver").innerHTML = '';
+          for (const id in allValues) {
+            const post = allValues[id];
+            document.querySelector(".min-sarver").innerHTML += `
+            <div id="sarver1" class="sarvers">
+              <div class="sarvser-s1">
+                <span class="playBTN"><img src="./img/sarver/play.jpg" alt=""></span>
+                <span>HD : <span class="sarver">${post.title}</span> <span class="live-animation">Live<span class="dot" aria-hidden="true"></span></span>
+              </div>
+              <a href="${post.fullcode}" hidden></a>
+              <div class="sarvser-s2">
+                <span class="sarver"><img id='sarver_runing' style="display: none;" src="" alt=""></span>
+              </div>
+            </div>`;
+            
+          }
+            document.querySelectorAll("div#sarver1").forEach(e=>{
+              function imgNone(){
+                document.querySelectorAll("span.sarver img").forEach(img=>{
+                  img.src = '';
+                  img.style.display='none';
+                })
+              }
+              e.addEventListener('click', function(){
+                imgNone();
+                // console.log(e.children[1].href);
+                document.querySelector("iframe#soop_player_video").src = e.children[1].href;
+                const imgSourch = "./img/sarver/sarver.gif";
+                e.children[2].children[0].children[0].src = imgSourch 
+                e.children[2].children[0].children[0].style.display='block';
+                
+                
+              })
+            });
+
+        }
+      });
+  }Live_Streaming();
+
+
+  //Match Results
+  function match_Results(){
+    document.querySelector(".top-bar div.match-result").addEventListener('click', function(){
+      document.querySelector(".match-results").classList.toggle('active');
+      const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dbRef = ref(db);
+          get(child(dbRef,'MatchResults/'))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const allValues = snapshot.val();
+                // Example: Loop through all posts and print titles
+                document.querySelector(".match-results").innerHTML = '';
+                for (const id in allValues) {
+                  const matchResult = allValues[id];
+                  document.querySelector(".match-results").innerHTML += `
+                  <div class="match-result">
+                    <div class="teames">
+                      <div class="teame-1">${matchResult.teame1}</div>
+                      <div class="vs">vs</div>
+                      <div class="teame-2">${matchResult.teame2}</div>
+                    </div>
+                    <span class="match-win">${matchResult.winType}</span>
+                    <span class="match-win-date">${matchResult.matchResultTime}</span>
+                  </div>`;
+                }
+              }
+          });
+    })
+  }match_Results();
+
+    ///Video players////
+    function displayPosts(posts) {
+      postsContainer.innerHTML = posts.map(post => `
+        <div class="items">
+          <div class="items-title">${post.title}</div>
+
+          <div class="play-button">
+            <div class="play-btn">
+              <input class="items-title" type="text" value="${post.title}" hidden readonly>
+              <a class="items-links" href="${post.fullcode}" hidden></a>
+              <img id="playImgs" style="display: none;" src="" alt="">
+              <input class="items-click" type="text" value="click" hidden readonly>
+              <i id="play-click" class="fas fa-play-circle"></i>
+            </div>
+            <div class="button">
+              <a href="https://data963.click/9c552ef271905674ab5d/84fc1ad001/" target="_blank">Download HD</a>
+              <a href="https://www.profitableratecpm.com/yie4ccgks?key=7bc3dcb846f504c9f0592291a84d2fd6" target="_blank">Download 4k</a>
+            </div>
+          </div>
+        </div>`).join('');
+
+        document.querySelectorAll(".play-btn").forEach(e=>{
+          function clicks(){
+            document.querySelectorAll("img#playImgs").forEach(imgs=>{
+              imgs.src = '';
+              imgs.style.display = 'none';
+              console.log(imgs);
+              
+            })
+          }
+          e.addEventListener('click', function(){
+              clicks()
+            // console.log(e.children[0].href);
+            document.querySelector(".home-screen").style.display="block";
+            document.querySelector("iframe#soop_player_video").src = e.children[1].href;
+            document.querySelector("span.sarver").innerText = e.children[0].value;
+            document.querySelector(".min-sarver").style.display = 'block';
+            document.querySelectorAll("div#sarver1").forEach(sarver1=>{
+              sarver1.style.display = 'none';
+            });
+            document.querySelector(".min-sarver").children[0].style.display = 'flex';
+            document.querySelector(".min-sarver").children[0].children[0].children[1].children[1].style.display = 'none';
+            document.querySelector(".min-sarver").children[0].children[2].children[0].children[0].style.display = 'block';
+            const imge = "./img/sarver/sarver.gif";
+            document.querySelector(".min-sarver").children[0].children[2].children[0].children[0].src = imge;
+            e.children[2].src = imge;
+            e.children[2].style.display = 'block';
+            // setInterval(() => {
+            //   e.children[2].style.display = 'block';
+            // }, 3000);
+
+          })
+        })
+    }
+
+    function showNotification(title) {
+      if (Notification.permission === "granted") {
+        new Notification("🎬 New Episode!", { body: title, icon: "./icone.png" });
+      }
+    }
+
+    function saveNotification(title) {
+      let list = JSON.parse(localStorage.getItem(NOTIF_LIST_KEY)) || [];
+      list.unshift(title);
+      localStorage.setItem(NOTIF_LIST_KEY, JSON.stringify(list.slice(0, 20)));
+    }
+
+    function updateNotifDropdown() {
+      let list = JSON.parse(localStorage.getItem(NOTIF_LIST_KEY)) || [];
+      notifList.innerHTML = list.length ? list.map(t => `<li>${t}</li>`).join('') : "<li>No new notifications</li>";
+    }
+
+    function updateNotifCount() {
+      let count = +localStorage.getItem(NOTIF_COUNT_KEY) + 1;
+      localStorage.setItem(NOTIF_COUNT_KEY, count);
+      notifBadge.innerText = count;
+      notifBadge.style.display = 'inline-block';
+    }
+
+    function resetNotifCount() {
+      localStorage.setItem(NOTIF_COUNT_KEY, "0");
+      notifBadge.style.display = 'none';
+    }
+
+    function clearNotifications() {
+      localStorage.removeItem(NOTIF_LIST_KEY);
+      resetNotifCount();
+      notifList.innerHTML = "<li>No new notifications</li>";
+    }
+
+    document.getElementById("bell").addEventListener("click", () => {
+      notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+      resetNotifCount();
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      document.body.classList.toggle("light");
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    });
+
+    if ('Notification' in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+    // Load persisted data
+    notifBadge.innerText = localStorage.getItem(NOTIF_COUNT_KEY) || "0";
+    if (+notifBadge.innerText > 0) notifBadge.style.display = 'inline-block';
+    updateNotifDropdown();
+
+    
+
+    // Ads Slider
+    const adsContainer = document.querySelector(".adsContainer");
+    const dotsContainer = document.getElementById("dotsContainer");
+    let currentIndex = 0;
+    let totalSlides = 0;
+    let intervalId;
+
+    async function RetAdsData() {
+      const snapshot = await get(child(ref(db), 'adsposts/'));
+      if (snapshot.exists()) {
+        const adsList = Object.values(snapshot.val());
+        totalSlides = adsList.length;
+        adsContainer.innerHTML = '';
+        dotsContainer.innerHTML = '';
+
+        adsList.forEach((post, i) => {
+          adsContainer.innerHTML += `<div class="itemse"><a href="${post.fullcode}" target="_blank"><img src="${post.adsLink}" /></a></div>`;
+          dotsContainer.innerHTML += `<span class="dot${i === 0 ? ' active' : ''}"></span>`;
+        });
+
+        updateSlider();
+        startAutoSlide();
+      }
+    }RetAdsData();
+
+    function updateSlider() {
+      adsContainer.style.transform = `translateX(${currentIndex * 100}%)`;
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentIndex);
+      });
+    }
+
+    function startAutoSlide() {
+      clearInterval(intervalId);
+      intervalId = setInterval(() => {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        updateSlider();
+      }, 5000);
+    }
+
+    //////Video player//////
+    document.querySelector("i#play").addEventListener('click', function(){
+      document.querySelector(".tv-Channels").style.display='none';
+      document.querySelector("div#postsContainer").style.display = "block";
+      document.querySelector(".match-list").style.display="none";
+      document.querySelector(".min-Setting").style.display="none";
+      document.querySelector("iframe#soop_player_video").src = '';
+      document.querySelector(".min-sarver").style.display = 'none';
+      setTimeout(() => {
+        loadPosts();
+      }, 3000);
+      
+    })
+    
+    const today = new Date();
+
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1); // subtract 1 day
+
+    // Format yesterday's date
+    const yesterdayFormatted = yesterday.toLocaleDateString();
+    const todayDates = today.toLocaleDateString();
+
+    const todayDate = todayDates.replace(/[/]/g, '');
+    const yesterdayDate = yesterdayFormatted.replace(/[/]/g, '');
+
+    // console.log(yesterdayDate);
+    // console.log(todayDate);
+
+    // Upload to Firebase
+    async function uploadData() {
+
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        const ip = data.ip;
+        // console.log(ip);
+
+      const ips = ip;
+      const noDots = ips.replace(/\./g, ""); // Remove all dots
+      //   console.log(noDots);
+      localStorage.setItem("Local_IP", noDots);
+        
+      //   await set(ref(db, "activeUsers/monthly"), monthlyData);
+      //   await set(ref(db, "activeUsers/daily"), dailyData);
+      await set(ref(db, "TodayactiveUsers/" + todayDate + "/" + noDots), {
+        ip: ip
+      });
+
+      function ipChack(){
+        const dbRef = ref(db);
+        const local_IP = localStorage.getItem("Local_IP");
+        
+        get(child(dbRef, 'VisitorsUsers' + '/' + todayDate + '/' + local_IP))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const allValues = snapshot.val();
+              const currenIP = ip;
+              const getIP = allValues.ip;
+
+              if(currenIP == getIP){
+                console.log(getIP);
+                console.log(currenIP);
+                console.log(local_IP);
+              }
+              
+            } else {
+              document.querySelector("iframe#soop_player_video").src = '';
+              document.querySelector(".ip-match").innerHTML = `
+                <a href="https://mysprotss.blogspot.com" target="_blank">
+                  <img src="./img/click.png" alt="">
+                </a>`;
+              document.querySelector(".home-screen").style.display = 'none';
+
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+      if(localStorage.getItem("users_add_Active") == 'Adds'){
+        ipChack();
+      }
+
+      const day = today.getDate();
+      await set(ref(db, "RaningMonth/" + day + "/" + noDots), {
+        ip: ip
+      });
+      
+    }
+
+    await uploadData();
+
+    function matchList(){
+      document.querySelector("img#match").addEventListener('click', function(){
+        document.querySelector(".tv-Channels").style.display='none';
+        document.querySelector(".match-list").style.display="block";
+        document.querySelector(".adsterReffarl.adstera").style.display="none";
+        document.querySelector("div#adstera").style.display="none";
+        document.querySelector(".promotionAds").style.display="none";
+        document.querySelector(".home-screen").style.display="none";
+        document.querySelector("div#postsContainer").style.display="none";
+        document.querySelector(".min-Setting").style.display="none";
+      });
+    }matchList();
+
+    // all_match_list////
+    function Live_Score(){
+
+      //March_lists_all///
+      function Live_Score_Board1() {
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dbRef = ref(db);
+          get(child(dbRef,'Live_Score_1/'))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const allValues = snapshot.val();
+                // Example: Loop through all posts and print titles
+                document.querySelector("#scor-boards1").innerHTML = '';
+                document.querySelector("#scor-boards1").innerHTML += `
+                      <div class="scor-board">
+                        <div class="teame1">
+                          <div class="teame"><span class="teame-A">${allValues.Innings_1.teame_1}</span>  ${allValues.Innings_1.run} - ${allValues.Innings_1.wiket}</div>
+                          <div class="over">(Ovs  ${allValues.Innings_1.over})</div>
+                        </div>
+                        <div class="teame2">
+                          <div class="teame"><span class="teame-A">${allValues.Innings_2.teame_1}</span>  ${allValues.Innings_2.run} - ${allValues.Innings_2.wiket}</div>
+                          <div class="over">(Ovs  ${allValues.Innings_2.over})</div>
+                        </div>
+                        <div class="live"> LIVE 
+                          <div class="dot"></div>
+                        </div>
+                      </div>`;
+              }
+          });
+      }
+
+
+      //March_lists_all///
+      function Live_Score_Board2() {
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dbRef = ref(db);
+          get(child(dbRef,'Live_Score_2/'))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const allValues = snapshot.val();
+                // Example: Loop through all posts and print titles
+                document.querySelector("#scor-boards2").innerHTML = '';
+
+                document.querySelector("#scor-boards2").innerHTML += `
+                      <div class="scor-board">
+                        <div class="teame1">
+                          <div class="teame"><span class="teame-A">${allValues.Innings_1.teame_1}</span>  ${allValues.Innings_1.run} - ${allValues.Innings_1.wiket}</div>
+                          <div class="over">(Ovs  ${allValues.Innings_1.over})</div>
+                        </div>
+                        <div class="teame2">
+                          <div class="teame"><span class="teame-A">${allValues.Innings_2.teame_1}</span>  ${allValues.Innings_2.run} - ${allValues.Innings_2.wiket}</div>
+                          <div class="over">(Ovs  ${allValues.Innings_2.over})</div>
+                        </div>
+                        <div class="live"> LIVE 
+                          <div class="dot"></div>
+                        </div>
+                      </div>`;
+              }
+          });
+      }
+
+      //March_lists_all///
+      function Live_Score_Board3() {
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dbRef = ref(db);
+          get(child(dbRef,'Live_Score_3/'))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const allValues = snapshot.val();
+                // Example: Loop through all posts and print titles
+                document.querySelector("#scor-boards3").innerHTML = '';
+                document.querySelector("#scor-boards3").innerHTML += `
+                      <div class="scor-board">
+                        <div class="teame1">
+                          <div class="teame"><span class="teame-A">${allValues.Innings_1.teame_1}</span>  ${allValues.Innings_1.run} - ${allValues.Innings_1.wiket}</div>
+                          <div class="over">(Ovs  ${allValues.Innings_1.over})</div>
+                        </div>
+                        <div class="teame2">
+                          <div class="teame"><span class="teame-A">${allValues.Innings_2.teame_1}</span>  ${allValues.Innings_2.run} - ${allValues.Innings_2.wiket}</div>
+                          <div class="over">(Ovs  ${allValues.Innings_2.over})</div>
+                        </div>
+                        <div class="live"> LIVE 
+                          <div class="dot"></div>
+                        </div>
+                      </div>`;
+              }
+          });
+      }
+      setInterval(() => {
+        Live_Score_Board1();
+        Live_Score_Board2();
+        Live_Score_Board3();
+      }, 1000);
+      
+    }Live_Score();
+
+
+    document.querySelector("i#others").addEventListener('click', function(){
+      document.querySelector(".tv-Channels").style.display='none';
+      document.querySelector(".match-list").style.display="none";
+      document.querySelector("div#postsContainer").style.display="none";
+      document.querySelector(".min-Setting").style.display="block";
+      document.querySelector(".adsterReffarl.adstera").style.display="none";
+      document.querySelector("div#adstera").style.display="none";
+      document.querySelector(".promotionAds").style.display="none";
+      document.querySelector(".home-screen").style.display="none";
+    });
+
+    // all_match_list////
+    function all_match_list(){
+      document.querySelectorAll(".Match_lists").forEach(e=>{
+        e.addEventListener('click', function(){
+          document.querySelector(".all-match-list").style.display='block';
+          document.querySelector(".tv-Channels").style.display='none';
+
+          //March_lists_all///
+          function March_lists_all() {
+            // Initialize Firebase
+              const app = initializeApp(firebaseConfig);
+              const db = getDatabase(app);
+
+              const values = e.children[1].value;
+              
+              const dbRef = ref(db);
+              get(child(dbRef, values + '/'))
+                .then((snapshot) => {
+                  if (snapshot.exists()) {
+                    const allValues = snapshot.val();
+                    // Example: Loop through all posts and print titles
+                    document.querySelector(".all-match-list").innerHTML = '';
+                    for (const id in allValues) {
+                      const post = allValues[id];
+                      document.querySelector(".all-match-list").innerHTML += `
+                        <div class="all-match-list-dtls">
+                          <div class="team-dtls">
+                            <div class="team-1">${post.teame_1}</div>
+                            <div class="vs">VS</div>
+                            <div class="team-2">${post.teame_2}</div>
+                          </div>
+                          <div class="times">
+                            <div class="date">${post.date}</div>
+                            <div class="time">${post.time}</div>
+                          </div>
+                        </div>`;
+                      }
+                    }
+                  });
+          }March_lists_all();  
+        })
+      })
+    }all_match_list();
+
+
+    // all_match_list////
+    function all_TV_channels(){
+
+      //March_lists_all///
+          function channel_lists() {
+            // Initialize Firebase
+              const app = initializeApp(firebaseConfig);
+              const db = getDatabase(app);
+              
+              const dbRef = ref(db);
+              get(child(dbRef,'ChannelList/'))
+                .then((snapshot) => {
+                  if (snapshot.exists()) {
+                    const allValues = snapshot.val();
+                    // Example: Loop through all posts and print titles
+                    document.querySelector(".tv-Channels").innerHTML = '';
+                    for (const id in allValues) {
+                      const post = allValues[id];
+                      document.querySelector(".tv-Channels").innerHTML += `
+                        <div class="tv-channel">
+                          <div class="img"><img src="${post.ChannelImg}" alt=""></div>
+                          <input type="text" class="channel-link" value="${post.ChannelLink}" hidden>
+                          <input type="text" value="${post.ChannelName}" hidden>
+                        </div>`;
+                      }
+                    }
+                      document.querySelectorAll(".tv-channel").forEach(e=>{
+                        e.addEventListener('click', function(){
+                          document.querySelector("iframe#soop_player_video").src = e.children[1].value;
+                          document.querySelector("span.sarver").innerText = e.children[2].value;
+                          document.querySelectorAll("div#sarver1").forEach(sarver1=>{
+                          sarver1.style.display = 'none';
+                          });
+                          document.querySelector(".min-sarver").children[0].style.display = 'flex';
+                          document.querySelector(".min-sarver").children[0].children[0].children[1].children[1].style.display = 'none';
+                          document.querySelector("span.sarver img").style.display="block";
+                          document.querySelector("span.sarver img").src = './img/sarver/sarver.gif';
+                          document.querySelector("span.playBTN img").src = e.children[0].children[0].src;
+                          
+                        })
+                      })
+                  });
+          }channel_lists();
+    }all_TV_channels();
+
+    (function () {
+      const STORAGE_KEY = '30_DayCountdownEnd';
+      const TOTAL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days 30 * 24 * 60 * 60 * 1000;
+
+      const $ = (id) => document.getElementById(id);
+      const daysEl = $('days');
+      const hoursEl = $('hours');
+      const minsEl = $('mins');
+      const secsEl = $('secs');
+      const barEl = $('bar');
+      const deadlineSpan = document.querySelector('.active-date');
+      const doneMsg = $('doneMsg');
+
+      let end = Number(localStorage.getItem(STORAGE_KEY));
+      let start = Number(localStorage.getItem(STORAGE_KEY + ':start'));
+      let paused = false;
+      let pauseOffset = 0; // how much time is remaining when paused
+      let rafId = null;
+
+      function fmtDate(ts) {
+        const d = new Date(ts);
+        return d.toLocaleString(undefined, {
+          year: 'numeric', month: 'short', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
+
+      function init() {
+        const now = Date.now();
+        if (!end || end <= now) {
+          start = now;
+          end = now + TOTAL_MS;
+          localStorage.setItem(STORAGE_KEY, String(end));
+          localStorage.setItem(STORAGE_KEY + ':start', String(start));
+        }
+        deadlineSpan.textContent = fmtDate(end);
+        tick();
+      }
+
+      function setDisplay(msLeft) {
+        const totalSeconds = Math.max(0, Math.floor(msLeft / 1000));
+        const d = Math.floor(totalSeconds / 86400);
+        const h = Math.floor((totalSeconds % 86400) / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+        daysEl.textContent = d;
+        hoursEl.textContent = String(h).padStart(2, '0');
+        minsEl.textContent = String(m).padStart(2, '0');
+        secsEl.textContent = String(s).padStart(2, '0');
+
+        const elapsed = Math.min(TOTAL_MS, Math.max(0, (Date.now() - start)));
+        const pct = (elapsed / TOTAL_MS) * 100;
+        barEl.style.width = pct.toFixed(2) + '%';
+      }
+
+      function loop() {
+        if (paused) return;
+        const now = Date.now();
+        const msLeft = end - now;
+        setDisplay(msLeft);
+        if (msLeft <= 0) {
+          cancelAnimationFrame(rafId);
+          doneMsg.style.display = 'block';
+          barEl.style.width = '100%';
+          localStorage.setItem("users_add_Active", 'Adds');
+          
+          return;
+        }
+        rafId = requestAnimationFrame(loop);
+      }
+
+      function tick() {
+        cancelAnimationFrame(rafId);
+        doneMsg.style.display = 'none';
+        loop();
+      }
+
+      // Kick it off
+      init();
+    })();
+    
+
+    function noElements(){
+      // Disable right-click
+      document.addEventListener("contextmenu", function(e) {
+        e.preventDefault();
+      });
+
+      // Disable drag events
+      document.addEventListener("dragstart", function(e) {
+        e.preventDefault();
+      });
+
+      // Disable copy & cut
+      document.addEventListener("copy", function(e) {
+        e.preventDefault();
+      });
+      document.addEventListener("cut", function(e) {
+        e.preventDefault();
+      });
+
+      // Block all common inspect/shortcut keys
+      document.addEventListener("keydown", function(e) {
+        // F12
+        if (e.key === "F12") e.preventDefault();
+
+        // Ctrl+Shift+I, J, C, K, E (Inspect, Console, Picker, Firefox shortcuts)
+        if (e.ctrlKey && e.shiftKey && ["I", "J", "C", "K", "E"].includes(e.key.toUpperCase())) {
+          e.preventDefault();
+        }
+
+        // Ctrl+U (View Source), Ctrl+S (Save page), Ctrl+P (Print)
+        if (e.ctrlKey && ["U", "S", "P"].includes(e.key.toUpperCase())) {
+          e.preventDefault();
+        }
+      });
+    }noElements();
+  </script>
+</body>
+</html>
