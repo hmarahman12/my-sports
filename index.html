@@ -97,7 +97,7 @@
     height: 100%;
     }
     .slider-wrapper img {
-    width: 300px !important;
+    width: 300px ;
     height: 100%;
     object-fit: inherit;
     }
@@ -198,6 +198,11 @@
   </style>
 
   <style>
+    @media only screen and (max-width: 1000px){
+      body::-webkit-scrollbar{
+        width: 0;
+      }
+    }
   .scor-board {
     border: 1px solid #838383;
     border-radius: 3px;
@@ -620,7 +625,7 @@
       <input type="text" value="t20" hidden>
     </div>
     <div class="Match_lists">
-      <img id="odi" src="./img/odi.png" alt="">
+      <img id="odi" src="./img/odi.webp" alt="">
       <input type="text" value="odi" hidden>
     </div>
     <div id="ipl" class="Match_lists">
@@ -1388,6 +1393,18 @@
                           <input type="text" class="channel-link" value="${post.ChannelLink}" hidden>
                           <input type="text" value="${post.ChannelName}" hidden>
                         </div>`;
+                        if((window.innerWidth <= 1000)){ //mobile is desktop
+                          document.querySelectorAll(".tv-channel img").forEach(e=>{
+                            e.style.width="250px";
+                            e.style.height="150px";
+                          });
+                        }
+                        if((window.innerWidth <= 500)){ //mobile is desktop
+                          document.querySelectorAll(".tv-channel img").forEach(e=>{
+                            e.style.width="100px";
+                            e.style.height="65px";
+                          });
+                        }
                       }
                     }
                       document.querySelectorAll(".tv-channel").forEach(e=>{
@@ -1411,7 +1428,7 @@
 
     (function () {
       const STORAGE_KEY = '30_DayCountdownEnd';
-      const TOTAL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days 30 * 24 * 60 * 60 * 1000;
+      const TOTAL_MS =  30 * 24 * 60 * 60 * 1000; // 30 days 30 * 24 * 60 * 60 * 1000;
 
       const $ = (id) => document.getElementById(id);
       const daysEl = $('days');
@@ -1490,6 +1507,67 @@
       init();
     })();
     
+    function mobileisDesktop(){
+      if(window.innerWidth <= 1000){
+        document.querySelector(".top-bar").style.maxWidth="unset";
+        document.querySelector(".logo img").style.height="100px";
+        document.querySelector(".match-result").style.fontSize="50px";
+        document.querySelector(".bell-icon").style.fontSize="100px";
+        document.querySelector(".theme-toggle").style.fontSize="100px";
+        // document.querySelector(".match-results .match-result").style.fontSize="30px";
+        // document.querySelector(".match-results .match-result .vs").style.fontSize="30px";
+        // document.querySelector("span.match-win").style.fontSize="30px";
+        // document.querySelector("span.match-win-date").style.fontSize="30px";
+        document.querySelector("div#playerWrap").style.maxWidth="unset";
+        document.querySelector("div#note").innerHTML = 'my-sports.live';
+        document.querySelector(".min-sarver").style.fontSize="30px";
+        document.querySelectorAll("span.playBTN img").forEach(e => {
+          e.style.marginTop="6px";
+        });
+        document.querySelector(".slider-wrapper").style.maxWidth="400px";
+        document.querySelectorAll(".slider-wrapper img").forEach(e => {
+          e.style.width="400px";
+        });
+        document.querySelector(".icons").style.fontSize="100px";
+        document.querySelector(".tv-Channels").style.paddingBottom="200px";
+        document.querySelector(".min-Setting").style.fontSize="40px";
+        document.querySelectorAll(".match-list div img").forEach(e => {
+          e.style.width="100px";
+          e.style.height="100px";
+        });
+      }
+    }mobileisDesktop();
+
+    function Desktopismobile(){
+      if(window.innerWidth <= 500){
+        document.querySelector(".top-bar").style.maxWidth="300px";
+        document.querySelector(".logo img").style.height="40px";
+        document.querySelector(".match-result").style.fontSize="unset";
+        document.querySelector(".bell-icon").style.fontSize="24px";
+        document.querySelector(".theme-toggle").style.fontSize="24px";
+        // document.querySelector(".match-results .match-result").style.fontSize="30px";
+        // document.querySelector(".match-results .match-result .vs").style.fontSize="30px";
+        // document.querySelector("span.match-win").style.fontSize="30px";
+        // document.querySelector("span.match-win-date").style.fontSize="30px";
+        document.querySelector("div#playerWrap").style.maxWidth="unset";
+        document.querySelector("div#note").innerHTML = 'my-sports.live';
+        document.querySelector(".min-sarver").style.fontSize="unset";
+        document.querySelectorAll("span.playBTN img").forEach(e => {
+          e.style.marginTop="6px";
+        });
+        document.querySelector(".slider-wrapper").style.maxWidth="300px";
+        document.querySelectorAll(".slider-wrapper img").forEach(e => {
+          e.style.width="300px";
+        });
+        document.querySelector(".icons").style.fontSize="50px";
+        document.querySelector(".tv-Channels").style.paddingBottom="100px";
+        document.querySelector(".min-Setting").style.fontSize="unset";
+        document.querySelectorAll(".match-list div img").forEach(e => {
+          e.style.width="60px";
+          e.style.height="50px";
+        });
+      }
+    }Desktopismobile();
 
     function noElements(){
       // Disable right-click
@@ -1525,10 +1603,8 @@
           e.preventDefault();
         }
       });
-    }noElements();
+    }
+    noElements();
   </script>
 </body>
-
 </html>
-
-
