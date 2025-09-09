@@ -559,6 +559,10 @@
   </div>
 
   <!-- Header -->
+   <div class="marque">
+    <marquee style="color: rgb(245, 45, 45); background: rgb(255, 194, 194);font-size: 20px;"></marquee>
+   </div>
+  <!-- Header -->
   <div class="top-bar">
     <div class="logo"><a href=""><img src="./img/Logo tsports.svg" alt="Logo"></a></div>
     <div class="match-result">Match Result</div>
@@ -1541,6 +1545,8 @@
     function Desktopismobile(){
       if(window.innerWidth <= 500){
         document.querySelector(".top-bar").style.maxWidth="300px";
+        document.querySelector("marquee").innerHTML = "Please Desktop Site One !";
+        document.querySelector("marquee").style.padding= "5px";
         document.querySelector(".logo img").style.height="40px";
         document.querySelector(".match-result").style.fontSize="unset";
         document.querySelector(".bell-icon").style.fontSize="24px";
