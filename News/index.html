@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+    <link rel="icon" href="../img/favicon.ico">
+    <title>Live News / Live Cricket</title>
+    <style>
+        img#back-icone {
+            position: absolute;
+            width: 60px;
+            top: 30px;
+            left: 30px;
+        }
+
+        nav {
+            width: 1000px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px auto;
+        }
+        span.logo img {
+            width: 100px;
+            border: 1px solid red;
+            padding: 3px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        nav span.liveNews,nav span.liveMatch {
+            border: 1px solid red;
+            border-radius: 2px;
+            padding: 12px;
+            font-size: 20px;
+            font-family: sans-serif;
+            cursor: pointer;
+            position: relative;
+        }
+        span.dot {
+            width: 10px;
+            height: 10px;
+            background: red;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            border-radius: 999999%;
+            animation-name: dot;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes dot {
+            0%   {opacity: 75%;}
+            25%  {opacity: 50%;}
+            50%  {opacity: 75%;}
+            75%  {opacity: 50%;}
+            100% {opacity: 75%;}
+        }
+
+        .post-news {
+            cursor: pointer;
+            margin: 25px auto;
+        }
+        .items-head {
+            width: 1000px;
+            margin: 45px auto;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            height: 60px;
+            justify-content: space-between;
+        }
+        .profile1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 20%;
+            border-right: 2px solid #736f6f;
+            padding-right: 5px;
+        }
+        .title {
+            display: flex;
+            flex-direction: column;
+            font-family: sans-serif;
+            font-size: 20px;
+        }
+        .title2 {
+            width: 78%;
+            font-size: 30px;
+            font-family: fantasy;
+            word-wrap: break-word;
+        }
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border: 1px solid red;
+            border-radius: 50%;
+            box-shadow: 0 0 5px 0px red;
+        }
+        .border {
+            border: 1px solid #ff8787;
+            margin: 10px 0;
+        }
+
+        .newsIMG iframe{
+            width: 99.6%;
+            height: 500px;
+            display: block;
+            margin: auto;
+            border: 1px solid #f89f9f;
+            border-radius: 3px;
+        }
+        span.newsDes {
+            font-size: 18px;
+            font-family: monospace;
+            display: block;
+            margin: 50px auto;
+            padding: 10px 0;
+            border-bottom: 1px solid #f3a0a0;
+        }
+        .post-news.postViwe {
+            box-shadow: 0px 0px 28px -5px black;
+            padding: 10px;
+        }
+        .share img {
+            width: 100px;
+            position: relative;
+            border: 1px solid #fd6f6f;
+            padding: 3px;
+            border-radius: 2px;
+            margin-top: -30px;
+        }
+    </style>
+
+</head>
+<body>
+    <nav>
+        <span class="logo">
+            <img src="../img/Logo tsports.svg" alt="">
+        </span>
+        <span class="liveNews">Latest News</span>
+        <span class="liveMatch"><span class="dot"></span> Live Cricket</span>
+    </nav>
+    <div class="items-head"></div>
+
+
+    <script src="./app.js"></script>
+</body>
+</html>
