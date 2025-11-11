@@ -117,7 +117,9 @@ function homePage() {
 
 //condition
 let herf = location.href;
-if(herf !== 'https://my-sports.live/News/index.html'){
+if(herf !== 'https://my-sports.live/News'){
+  oneValue()
+}else if(herf !== 'https://my-sports.live/News/index.html'){
   oneValue()
 }else{
   homePage()
@@ -133,4 +135,5 @@ function clickFunktion(){
   document.querySelector("span.liveMatch").addEventListener('click', function(){
     window.open("https://my-sports.live");
   });
+
 }clickFunktion();
