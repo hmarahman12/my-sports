@@ -117,7 +117,7 @@ function homePage() {
 
 //condition
 let herf = location.href;
-if(herf !== 'https://my-sports.live/News'){
+if(herf !== 'https://my-sports.live/News/'){
   oneValue()
 }else{
   homePage()
@@ -135,4 +135,5 @@ function clickFunktion(){
   });
 
 }clickFunktion();
+
 
