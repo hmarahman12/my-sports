@@ -26,7 +26,7 @@ function oneValue(){
   
     //posts list
     allpost.innerHTML += `
-                  <a href="index.html"><img id="back-icone"; src="./back.webp" alt=""></a>
+                  <a href=""><img id="back-icone"; src="./back.webp" alt=""></a>
                   <div class="post-news postViwe">
                     <input type="text" id="" hidden>
                     <div class="profile">
@@ -135,5 +135,6 @@ function clickFunktion(){
   });
 
 }clickFunktion();
+
 
 
