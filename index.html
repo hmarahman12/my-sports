@@ -1480,8 +1480,6 @@
                     }
                       document.querySelectorAll(".live-match").forEach(e=>{
                         e.addEventListener('click', function(){
-                          console.log(e);
-                          
                           document.querySelector("iframe#soop_player_video").src = e.children[3].value;
                           document.querySelector("span.sarver").innerText = "LIVE MATCH";
                           document.querySelectorAll("div#sarver1").forEach(sarver1=>{
@@ -1492,7 +1490,7 @@
                           document.querySelector("span.sarver img").style.display="block";
                           document.querySelector("span.sarver img").src = './img/sarver/sarver.gif';
                           document.querySelector("span.playBTN img").src = e.children[1].src;
-                          
+                          window.scrollTo(0, 0);
                         })
                       })
                   });
@@ -1549,7 +1547,7 @@
                           document.querySelector("span.sarver img").style.display="block";
                           document.querySelector("span.sarver img").src = './img/sarver/sarver.gif';
                           document.querySelector("span.playBTN img").src = e.children[0].children[0].src;
-                          
+                          window.scrollTo(0, 0);
                         })
                       })
                   });
@@ -1738,6 +1736,7 @@
   </script>
 </body>
 </html>
+
 
 
 
