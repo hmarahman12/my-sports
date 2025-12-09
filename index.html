@@ -15,6 +15,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
   <style>
+    :root {
+      --bg: #000;
+      --btn-bg: rgba(255,255,255,0.08);
+      --btn-fg: #fff;
+      --accent: #06f;
+    }
+    *{
+      margin: 0;
+      padding: 0;
+    }
     /* Basic Reset and Themes */
     .ip-match{
       margin: auto;
@@ -35,7 +45,9 @@
       border: 1px solid #ababab;
       padding: 3px;
     }
-
+    iframe#soop_player_video {
+      border: 1px solid #6f6f6f;
+    }
     .search-container input {
       width: 100%; padding: 8px; font-size: 16px;
       border-radius: 5px; border: 1px solid #ccc;
@@ -147,14 +159,30 @@
       color: black;
     }
     /* Post Items */
-    .items-head { max-width: 700px; margin: 95px auto; }
+    .items-head {
+      width: 700px;
+      margin: 0 auto 50px auto;
+      height: 700px;
+      overflow: auto;
+    }
+    .items-head::-webkit-scrollbar{
+      width: 0;
+    }
     .play-button {
       position: relative;
+      display: flex;
+      justify-content: space-between;
     }
     i#play-click {
-      font-size: 85px;
+      font-size: 72px;
       position: absolute;
       cursor: pointer;
+    }
+    .postLOGO img {
+      height: 60px !important;
+      width: 60px !important;
+      border: 1px solid #777777;
+      border-radius: 50%;
     }
     .items {
       background: white; margin-bottom: 20px; padding: 15px;
@@ -167,7 +195,10 @@
     iframe { width: 100%; height: 315px; border: none; border-radius: 6px; }
 
     /* Download Buttons */
-    .button { display: flex; flex-direction: column; align-items: flex-end; font-size: 20px; }
+    .button { display: flex; flex-direction: column; align-items: center; font-size: 20px; }
+    .postLOGO {
+      margin-left: 45px;
+    }
     .button a {
       border: 1px solid rgb(27, 27, 27); margin: 5px; padding: 3px;
       border-radius: 3px; background: #07a907; color: #fff; font-weight: bold;
@@ -195,6 +226,8 @@
 
     .adstera, .adsterReffarl { height: 55px; text-align: center; margin-bottom: 10px; }
     .adsterReffarl img { width: 250px !important; }
+
+    div#note {display: none;}
   </style>
 
   <style>
@@ -435,20 +468,6 @@
   </style>
 
   <style>
-    :root {
-      --bg: #000;
-      --btn-bg: rgba(255,255,255,0.08);
-      --btn-fg: #fff;
-      --accent: #06f;
-    }
-    html,body {
-      height: 100%;
-      margin: 0;
-      color: #fff;
-      -webkit-font-smoothing:antialiased;
-      -webkit-overflow-scrolling: touch;
-    }
-
     /* container that becomes fullscreen */
     .player-wrap {
       inset: 0;
@@ -589,11 +608,11 @@
   <audio id="notifSound" src="https://www.myinstants.com/media/sounds/notification.mp3" preload="auto"></audio>
 
   <!-- Adsterra Ads -->
-  <!-- <div class="adsterReffarl adstera">
+  <div class="adsterReffarl adstera">
     <a target="_blank" href="https://beta.publishers.adsterra.com/referral/6bRS6rSK1q" rel="nofollow">
       <img src="https://landings-cdn.adsterratech.com/referralBanners/gif/468x60_adsterra_reff.gif" alt="banner" />
     </a>
-  </div> -->
+  </div>
   <div id="adstera" class="adstera" style="display: none;">
     <script>
       atOptions = {
@@ -620,11 +639,14 @@
       <span class="bell-icon" id="bell"><i class="fas fa-bell"></i><span class="badge" id="notifCount" style="display: none;">0</span></span>
       <div class="notif-dropdown" id="notifDropdown">
         <ul id="notifList"></ul>
-        <button class="clear-btn" onclick="clearNotifications()">Clear</button>
+        <button class="clear-btn">Clear</button>
       </div>
-      <span class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌓</span>
+      <span class="theme-toggle" id="themeToggle" title="Toggle dark mode">☾</span>
     </div>
   </div>
+
+
+  <div class="test"></div>
 
      <!-- More Setting -->
     <div class="min-Setting" style="display: none;">
@@ -670,11 +692,14 @@
     </div>
 
 
-    <div class="title">TV Channels</div>
+    <div class="title  live-event">TV Channels</div>
     <div class="tv-Channels"></div>
+
+
+      <!-- Posts -->
+    <div class="items-head" id="postsContainer" style="display: none;"></div>
+
   </div>
-  <!-- Posts -->
-  <div class="items-head" id="postsContainer" style="display: none;"></div>
 
   <!-- match list -->
    <div class="match-list" style="display: none;">
@@ -713,6 +738,7 @@
     <img id="match" src="./img/match.png" alt="">
     <i id="play" class="fas fa-play-circle"></i>
     <i id="others" class="fa-solid fa-bars"></i>
+    <input id="others" type="hidden" value="">
   </div>
 
   <!-- Firebase App Logic -->
@@ -734,6 +760,11 @@
           const enterBtn = document.getElementById('enterFs');
           const exitBtn = document.getElementById('exitFs');
           const note = document.getElementById('note');
+          const sarver = document.querySelector('.min-sarver');
+          const liveEvent = document.querySelector('.live-Events');
+          const tvchanneltitle = document.querySelector('.title.live-event');
+          const tvchannel = document.querySelector('.tv-Channels');
+          
 
           // Utility: are we in fullscreen?
           function isFullscreen() {
@@ -798,13 +829,25 @@
 
           function updateControls() {
             if (isFullscreen()) {
+              iframe.style.width= '100%';
+              iframe.style.height= '100%';
               enterBtn.style.display = 'none';
               exitBtn.style.display = '';
               note.style.display = 'none';
+              sarver.style.display = 'none';
+              liveEvent.style.display = 'none';
+              tvchanneltitle.style.display = 'none';
+              tvchannel.style.display = 'none';
             } else {
+              iframe.style.width= 'unset';
+              iframe.style.height= 'unset';
               enterBtn.style.display = '';
               exitBtn.style.display = 'none';
               note.style.display = '';
+              sarver.style.display = '';
+              liveEvent.style.display = '';
+              tvchanneltitle.style.display = '';
+              tvchannel.style.display = '';
             }
           }
 
@@ -892,6 +935,7 @@
     const theme = localStorage.getItem("theme");
     if (theme == 'dark') {
       document.querySelector('body').classList.toggle('dark')
+      document.querySelector('#themeToggle').innerHTML = "☀︎";
     }
 
     const LAST_SEEN_KEY = 'lastSeenPostTitle';
@@ -901,7 +945,7 @@
     let initialLoad = true;
 
     function loadPosts() {
-      onValue(ref(db, 'posts/'), (snapshot) => {
+      onValue(ref(db, 'HighlightsMatch/'), (snapshot) => {
         const posts = snapshot.val();
         if (!posts) {
           postsContainer.innerHTML = '<p>No Video Available.</p>';
@@ -1013,43 +1057,67 @@
   }match_Results();
 
     ///Video players////
-    function displayPosts(posts) {
-      postsContainer.innerHTML = posts.map(post => `
-        <div class="items">
-          <div class="items-title">${post.title}</div>
+function displayPosts() {
 
-          <div class="play-button">
-            <div class="play-btn">
-              <input class="items-title" type="text" value="${post.title}" hidden readonly>
-              <a class="items-links" href="${post.fullcode}" hidden></a>
-              <img id="playImgs" style="display: none;" src="" alt="">
-              <input class="items-click" type="text" value="click" hidden readonly>
-              <i id="play-click" class="fas fa-play-circle"></i>
-            </div>
-            <div class="button">
-              <a href="https://data963.click/9c552ef271905674ab5d/84fc1ad001/" target="_blank">Download HD</a>
-              <a href="https://www.profitableratecpm.com/yie4ccgks?key=7bc3dcb846f504c9f0592291a84d2fd6" target="_blank">Download 4k</a>
+  const dataRef = ref(db, "HighlightsMatch/");
+
+    onValue(dataRef, (snapshot) => {
+      const dataList = [];
+      snapshot.forEach(child => {
+        dataList.push({
+          id: child.key,
+          ...child.val()
+        });
+      });
+
+      // Sort by newest first (using uid timestamp)
+      dataList.sort((a, b) => b.uid - a.uid);
+
+      // Display latest first
+      let html = "";
+      dataList.forEach(item => {
+        html += `
+          <div class="items" data-key="${item.uid}">
+            <div class="items-title">${item.title}</div>
+
+            <div class="play-button">
+              <div class="play-btn">
+                <input class="items-title" type="text" value="${item.title}" hidden readonly>
+                <a class="items-links" href="${item.fullcode}" hidden></a>
+                <img id="playImgs" style="display: none;" src="" alt="">
+                <input class="items-click" type="text" value="click" hidden readonly>
+                <i id="play-click" class="fas fa-play-circle"></i>
+              </div>
+              <div class="postLOGO">
+                <img src="${item.match_logo}">
+              </div>
+              <div class="button">
+                <a href="https://data963.click/9c552ef271905674ab5d/84fc1ad001/" target="_blank">Download HD</a>
+                <div class="times">${item.times}</div>
+              </div>
             </div>
           </div>
-        </div>`).join('');
+        `;
+        
+      });
 
-        document.querySelectorAll(".play-btn").forEach(e=>{
-          function clicks(){
-            document.querySelectorAll("img#playImgs").forEach(imgs=>{
+      document.querySelector(".items-head").innerHTML = html;
+
+      document.querySelectorAll(".play-btn").forEach(e => {
+          function clicks() {
+            document.querySelectorAll("img#playImgs").forEach(imgs => {
               imgs.src = '';
               imgs.style.display = 'none';
-              console.log(imgs);
-              
-            })
+            });
           }
-          e.addEventListener('click', function(){
-              clicks()
-            // console.log(e.children[0].href);
-            document.querySelector(".home-screen").style.display="block";
+
+          e.addEventListener('click', function() {
+            clicks();
+            document.querySelector(".home-screen").style.display = "block";
             document.querySelector("iframe#soop_player_video").src = e.children[1].href;
             document.querySelector("span.sarver").innerText = e.children[0].value;
             document.querySelector(".min-sarver").style.display = 'block';
-            document.querySelectorAll("div#sarver1").forEach(sarver1=>{
+            document.querySelectorAll("div#sarver1").forEach(sarver1 => {
               sarver1.style.display = 'none';
             });
             document.querySelector(".min-sarver").children[0].style.display = 'flex';
@@ -1059,13 +1127,12 @@
             document.querySelector(".min-sarver").children[0].children[2].children[0].children[0].src = imge;
             e.children[2].src = imge;
             e.children[2].style.display = 'block';
-            // setInterval(() => {
-            //   e.children[2].style.display = 'block';
-            // }, 3000);
+            window.scrollTo(0, 0);
+          });
+        });
+    });
+}
 
-          })
-        })
-    }
 
     function showNotification(title) {
       if (Notification.permission === "granted") {
@@ -1096,11 +1163,11 @@
       notifBadge.style.display = 'none';
     }
 
-    function clearNotifications() {
+    document.querySelector(".clear-btn").addEventListener('click', function(){
       localStorage.removeItem(NOTIF_LIST_KEY);
       resetNotifCount();
       notifList.innerHTML = "<li>No new notifications</li>";
-    }
+    })
 
     document.getElementById("bell").addEventListener("click", () => {
       notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
@@ -1108,6 +1175,12 @@
     });
 
     document.getElementById("themeToggle").addEventListener("click", () => {
+      const x = localStorage.getItem("theme");
+      if(x == 'dark'){
+        document.querySelector('#themeToggle').innerHTML = "☾";
+      }else if(x !== 'dark'){
+        document.querySelector('#themeToggle').innerHTML = "☀︎";
+      }
       document.body.classList.toggle("dark");
       document.body.classList.toggle("light");
       localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
@@ -1167,12 +1240,19 @@
     //////Video player//////
     document.querySelector("i#play").addEventListener('click', function(){
       document.querySelector(".liveEvents").style.display='none';
+      document.querySelector(".live-Events").style.display='none';
+      document.querySelector(".title").style.display='none';
+      document.querySelector(".title.live-event").style.display='none';
       document.querySelector(".tv-Channels").style.display='none';
       document.querySelector("div#postsContainer").style.display = "block";
       document.querySelector(".match-list").style.display="none";
       document.querySelector(".min-Setting").style.display="none";
-      document.querySelector("iframe#soop_player_video").src = '';
-      document.querySelector(".min-sarver").style.display = 'none';
+      // document.querySelector("iframe#soop_player_video").src = '';
+      // document.querySelector(".min-sarver").style.display = 'none';
+      if(window.innerWidth <= 1000){
+        document.querySelector(".items-head").style.width="100%";
+        
+      }
       setTimeout(() => {
         loadPosts();
       }, 3000);
@@ -1374,15 +1454,25 @@
 
 
     document.querySelector("i#others").addEventListener('click', function(){
-      document.querySelector(".liveEvents").style.display='none';
-      document.querySelector(".tv-Channels").style.display='none';
-      document.querySelector(".match-list").style.display="none";
-      document.querySelector("div#postsContainer").style.display="none";
-      document.querySelector(".min-Setting").style.display="block";
-      document.querySelector(".adsterReffarl.adstera").style.display="none";
-      document.querySelector("div#adstera").style.display="none";
-      document.querySelector(".promotionAds").style.display="none";
-      document.querySelector(".home-screen").style.display="none";
+      const x = document.querySelector(".min-Setting");
+      if(x.style.display === 'none'){
+        document.querySelector(".liveEvents").style.display='none';
+        document.querySelector(".tv-Channels").style.display='none';
+        document.querySelector(".match-list").style.display="none";
+        document.querySelector("div#postsContainer").style.display="none";
+        document.querySelector(".min-Setting").style.display="block";
+        document.querySelector(".adsterReffarl.adstera").style.display="none";
+        document.querySelector("div#adstera").style.display="none";
+        document.querySelector(".promotionAds").style.display="none";
+        document.querySelector(".home-screen").style.display="none";
+      }else{
+          document.querySelector(".liveEvents").style.display='flex';
+          document.querySelector(".tv-Channels").style.display='flex';
+          document.querySelector("div#postsContainer").style.display="block";
+          document.querySelector(".min-Setting").style.display="none";
+          document.querySelector(".promotionAds").style.display="block";
+          document.querySelector(".home-screen").style.display="block";
+      }
     });
 
     // all_match_list////
@@ -1473,7 +1563,7 @@
                             e.style.width="70px";
                             e.style.height="100px";
                             e.children[2].style.fontSize="10px";
-                            document.querySelector(".home-screen iframe").style.height="200px";
+                            document.querySelector(".home-screen iframe").style.height="172px";
                           });
                         }
                       }
@@ -1531,6 +1621,7 @@
                           document.querySelectorAll(".tv-channel img").forEach(e=>{
                             e.style.width="100px";
                             e.style.height="65px";
+                            document.querySelector(".items-head").style.maxWidth="700px";
                           });
                         }
                       }
@@ -1736,10 +1827,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
