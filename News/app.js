@@ -64,28 +64,19 @@ function oneValue(){
 }
 
 //home page function
+function homePage() {
+  db.ref('News/').on('value', function(snapshot) {
+    const posts = snapshot.val();
+    allpost.innerHTML = '';
 
-function homePage(){
+    if (!posts) return;
 
-    const dataRef = ref(db, "News/");
+    // Convert object to array and reverse (latest first)
+    const postArray = Object.entries(posts).reverse();
 
-    onValue(dataRef, (snapshot) => {
-      const dataList = [];
-      snapshot.forEach(child => {
-        dataList.push({
-          id: child.key,
-          ...child.val()
-        });
-      });
-
-      // Sort by newest first (using uid timestamp)
-      dataList.sort((a, b) => b.uid - a.uid);
-
-      // Display latest first
-      let html = "";
-      dataList.forEach(post => {
-        html += `
-          <div class="post-news" data-id="${post.key}">
+    postArray.forEach(([key, post]) => {
+      const postHTML = `
+        <div class="post-news" data-id="${key}">
           <input id="hiddenID" type="text" hidden value="${post.NewsTitleE}">
           <div class="profile">
             <div class="profile1">
@@ -110,70 +101,19 @@ function homePage(){
           </div>
         </div>
       `;
-      });
 
-      allpost.innerHTML = html;
-          
+      allpost.innerHTML += postHTML;
     });
-      // Add click event once after all posts are rendered
+
+    // Add click event once after all posts are rendered
     document.querySelectorAll(".post-news").forEach(e => {
       e.addEventListener("click", function() {
         const postId = e.querySelector("#hiddenID").value;
         location.href = window.location.href + "?/" + postId;
       });
     });
+  });
 }
-
-// function homePage() {
-//   db.ref('News/').on('value', function(snapshot) {
-//     const posts = snapshot.val();
-//     allpost.innerHTML = '';
-
-//     if (!posts) return;
-
-//     // Convert object to array and reverse (latest first)
-//     const postArray = Object.entries(posts).reverse();
-
-//     postArray.forEach(([key, post]) => {
-//       const postHTML = `
-//         <div class="post-news" data-id="${key}">
-//           <input id="hiddenID" type="text" hidden value="${post.NewsTitleE}">
-//           <div class="profile">
-//             <div class="profile1">
-//               <img src="../img/icon2.png" alt="">
-//               <div class="title">
-//                 <span>MY Sports</span>
-//                 <span>${post.NewsDate}</span>
-//               </div>
-//             </div>
-//             <div class="title2">${post.NewsTitle}</div>
-//           </div>
-
-//           <div class="border"></div>
-
-//           <div class="newsPost">
-//             <div class="newsIMG">
-//               <iframe src="${post.Newslink}" frameborder="0"></iframe>
-//             </div>
-//             <div class="newsDescription">
-//               <span class="newsDes">${post.NewsDescription}</span>
-//             </div>
-//           </div>
-//         </div>
-//       `;
-
-//       allpost.innerHTML += postHTML;
-//     });
-
-//     // Add click event once after all posts are rendered
-//     document.querySelectorAll(".post-news").forEach(e => {
-//       e.addEventListener("click", function() {
-//         const postId = e.querySelector("#hiddenID").value;
-//         location.href = window.location.href + "?/" + postId;
-//       });
-//     });
-//   });
-// }
 
 //condition
 let herf = location.href;
@@ -195,6 +135,7 @@ function clickFunktion(){
   });
 
 }clickFunktion();
+
 
 
 
