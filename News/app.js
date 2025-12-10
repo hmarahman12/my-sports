@@ -66,22 +66,18 @@ function oneValue(){
 //home page function
 
 function homePage() {
-  db.ref('News/').on('value', function (snapshot) {
+  db.ref('News/').on('value', function(snapshot) {
     const posts = snapshot.val();
     allpost.innerHTML = '';
 
     if (!posts) return;
 
-    // Convert object to array and sort by date (latest first)
-    const postArray = Object.entries(posts).sort((a, b) => {
-      const dateA = new Date(a[1].NewsDate);
-      const dateB = new Date(b[1].NewsDate);
-      return dateB - dateA; // newest first
-    });
+    // Convert object to array and reverse (latest first)
+    const postArray = Object.entries(posts).reverse();
 
     postArray.forEach(([key, post]) => {
       const postHTML = `
-        <div class="post-news" data-id="${post.NewsTitleE}">
+        <div class="post-news" data-id="${key}">
           <div class="profile">
             <div class="profile1">
               <img src="../img/icon2.png" alt="">
@@ -109,14 +105,13 @@ function homePage() {
       allpost.innerHTML += postHTML;
     });
 
-    // Add click event to all posts
-    document.querySelectorAll(".post-news").forEach(el => {
-      el.addEventListener("click", function () {
-        const postId = el.dataset.id;
-        location.href = `${window.location.href}?/${postId}`;
+    // Add click event once after all posts are rendered
+    document.querySelectorAll(".post-news").forEach(e => {
+      e.addEventListener("click", function() {
+        const postId = e.querySelector("#hiddenID").value;
+        location.href = window.location.href + "?/" + postId;
       });
     });
-
   });
 }
 
@@ -194,6 +189,7 @@ function clickFunktion(){
   });
 
 }clickFunktion();
+
 
 
 
