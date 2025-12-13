@@ -579,6 +579,24 @@
       padding: 2px;
       margin: 2px;
     }
+
+    iframe#addsIframe {
+      position: absolute;
+      z-index: 999999;
+      height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: black;
+    }
+    img#clocse {
+      position: absolute;
+      z-index: 9999999;
+      width: 50px;
+      top: 12px;
+      right: 22px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -678,7 +696,7 @@
     <div id="scor-boards3" class="scor-boards"></div>
 
     <!----ip-match----->
-    <div class="ip-match"></div>
+    <div class="ip-match" style="display: none;"></div>
       
   <!----home screen----->
   <div class="player-wrap home-screen" id="playerWrap">
@@ -728,9 +746,6 @@
       
     </div>
    </div>
-
-
-
 
 
   <div class="icons">
@@ -1294,39 +1309,24 @@ function displayPosts() {
       });
 
       function ipChack(){
-        const dbRef = ref(db);
-        const local_IP = localStorage.getItem("Local_IP");
-        
-        get(child(dbRef, 'VisitorsUsers' + '/' + todayDate + '/' + local_IP))
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              const allValues = snapshot.val();
-              const currenIP = ip;
-              const getIP = allValues.ip;
 
-              if(currenIP == getIP){
-                console.log(getIP);
-                console.log(currenIP);
-                console.log(local_IP);
-              }
-              
-            } else {
-              document.querySelector("iframe#soop_player_video").src = '';
-              document.querySelector(".ip-match").innerHTML = `
-                <a href="http://livetv.fit" target="_blank">
-                  <img src="./img/click.png" alt="">
-                </a>`;
-              document.querySelector(".home-screen").style.display = 'none';
+            document.querySelector(".ip-match").innerHTML = `
+              <img id="clocse" src="https://png.pngtree.com/png-vector/20190417/ourmid/pngtree-vector-cross-icon-png-image_947234.jpg"/>
+              <iframe id="addsIframe" src="http://livetv.fit" width="100%" height="100%"></iframe>
+            `;
+      }ipChack();
 
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
-      }
       if(localStorage.getItem("users_add_Active") == 'Adds'){
-        ipChack();
+        setTimeout(() => {
+          document.querySelector(".ip-match").style.display='block';
+        }, 3600000);
       }
+      document.querySelector("img#clocse").addEventListener('click', function(){
+        document.querySelector(".ip-match").style.display='none';
+        setTimeout(() => {
+          document.querySelector(".ip-match").style.display='block';
+        }, 3600000);
+      })
 
       const day = today.getDate();
       await set(ref(db, "RaningMonth/" + day + "/" + noDots), {
@@ -1647,7 +1647,7 @@ function displayPosts() {
 
     (function () {
       const STORAGE_KEY = '30_DayCountdownEnd';
-      const TOTAL_MS =  30 * 24 * 60 * 60 * 1000; // 30 days 30 * 24 * 60 * 60 * 1000;
+      const TOTAL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days 30 * 24 * 60 * 60 * 1000;
 
       const $ = (id) => document.getElementById(id);
       const daysEl = $('days');
@@ -1827,4 +1827,3 @@ function displayPosts() {
   </script>
 </body>
 </html>
-
