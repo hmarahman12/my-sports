@@ -132,6 +132,7 @@
     cursor: pointer;
     }
     .home-screen iframe{
+      margin-top: 5px;
       width: 100%;
       height: 100%;
     }
@@ -148,7 +149,6 @@
     span.playBTN img {
       width: 60px;
       height: 45px;
-      margin-top: 5px;
     }
     span.sarver img{
       width: 50px;
@@ -1734,7 +1734,7 @@ function displayPosts() {
                                     hls.attachMedia(video);
 
                                     hls.on(Hls.Events.MANIFEST_PARSED, function(){
-                                      setStatus("");
+                                      setStatus("Live 🔴");
                                       video.play().catch(()=>{});
                                     });
 
