@@ -148,6 +148,7 @@
     span.playBTN img {
       width: 60px;
       height: 45px;
+      margin-top: 5px;
     }
     span.sarver img{
       width: 50px;
@@ -598,6 +599,60 @@
       cursor: pointer;
     }
   </style>
+  <style>
+body{
+    margin:0;
+    background:#000;
+    font-family:Arial;
+    color:#fff;
+    text-align:center;
+}
+
+.player-container{
+    display: none;
+    max-width:900px;
+    margin:20px auto;
+    background:#111;
+    padding:10px;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+}
+
+video{
+    width:100%;
+    border-radius:10px;
+    background:#000;
+}
+
+.title{
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.status{
+    font-size:14px;
+    color:#0f0;
+    margin-bottom:8px;
+}
+
+.controls{
+    margin-top:10px;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    background:#ff0000;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#cc0000;
+}
+  </style>
 </head>
 
 <body class="light">
@@ -699,7 +754,15 @@
     <div class="ip-match" style="display: none;"></div>
       
   <!----home screen----->
-  <div class="player-wrap home-screen" id="playerWrap">
+    <div class="player-wrap home-screen" id="playerWrap">
+        <!---api playar --->
+    <div class="player-container">
+      <div id="status" class="status">Connecting...</div>
+
+      <video id="video" controls autoplay muted playsinline></video>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
     <iframe  frameborder="0" height="150%" id="soop_player_video" src="https://vod.sooplive.co.kr/player/168766727/embed?showChat=false&amp;autoPlay=true&amp;mutePlay=true" width="100%" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="no-referrer-when-downgrade" loading="eager" allow="encrypted-media" allowFullScreen="" scrolling="no"></iframe>
 
     <div class="min-sarver"></div>
@@ -718,6 +781,8 @@
     <div class="items-head" id="postsContainer" style="display: none;"></div>
 
   </div>
+
+
 
   <!-- match list -->
    <div class="match-list" style="display: none;">
@@ -1610,6 +1675,7 @@ function displayPosts() {
                           <div class="img"><img src="${post.ChannelImg}" alt=""></div>
                           <input type="text" class="channel-link" value="${post.ChannelLink}" hidden>
                           <input type="text" value="${post.ChannelName}" hidden>
+                          <input type="text" value="${post.lianksType}" hidden>
                         </div>`;
                         if((window.innerWidth <= 1000)){ //mobile is desktop
                           document.querySelectorAll(".tv-channel img").forEach(e=>{
@@ -1626,19 +1692,132 @@ function displayPosts() {
                         }
                       }
                     }
+
+                      document.querySelector(".player-container").style.display="none";
                       document.querySelectorAll(".tv-channel").forEach(e=>{
                         e.addEventListener('click', function(){
-                          document.querySelector("iframe#soop_player_video").src = e.children[1].value;
-                          document.querySelector("span.sarver").innerText = e.children[2].value;
-                          document.querySelectorAll("div#sarver1").forEach(sarver1=>{
-                          sarver1.style.display = 'none';
-                          });
-                          document.querySelector(".min-sarver").children[0].style.display = 'flex';
-                          document.querySelector(".min-sarver").children[0].children[0].children[1].children[1].style.display = 'none';
-                          document.querySelector("span.sarver img").style.display="block";
-                          document.querySelector("span.sarver img").src = './img/sarver/sarver.gif';
-                          document.querySelector("span.playBTN img").src = e.children[0].children[0].src;
-                          window.scrollTo(0, 0);
+                          if(e.children[3].value == "api"){
+
+                            function linksAPI(){
+                              document.querySelector("iframe#soop_player_video").style.display="none";
+                              document.querySelector("iframe#soop_player_video").src = "";
+                              document.querySelector(".player-container").style.display="block";
+
+                              const video = document.getElementById('video');
+                              const statusText = document.getElementById('status');
+
+                              // ⚠️ Replace with a working M3U8 if needed
+                              const streamURL = e.children[1].value;
+
+                              let hls;
+                              let retryCount = 0;
+
+                              function setStatus(text, color="lime"){
+                                statusText.innerText = text;
+                                statusText.style.color = color;
+                              }
+
+                              function loadStream(){
+                                setStatus("Connecting...");
+
+                                  if(Hls.isSupported()){
+                                    if(hls){
+                                      hls.destroy();
+                                    }
+
+                                    hls = new Hls({
+                                      lowLatencyMode: true,
+                                        maxBufferLength: 30
+                                    });
+
+                                    hls.loadSource(streamURL);
+                                    hls.attachMedia(video);
+
+                                    hls.on(Hls.Events.MANIFEST_PARSED, function(){
+                                      setStatus("");
+                                      video.play().catch(()=>{});
+                                    });
+
+                                  hls.on(Hls.Events.ERROR, function(event, data){
+
+                                  if(data.fatal){
+                                    switch(data.type){
+                                      case Hls.ErrorTypes.NETWORK_ERROR:
+                                        setStatus("Network Error... Retrying", "orange");
+                                        retry();
+                                      break;
+
+                                      case Hls.ErrorTypes.MEDIA_ERROR:
+                                        setStatus("Fixing Media Error...", "yellow");
+                                        // hls.recoverMediaError();
+                                      break;
+
+                                      default:
+                                        setStatus("Reloading...", "red");
+                                        retry();
+                                      break;
+                                    }
+                                  }
+
+                                  });
+
+                                } 
+                                else if(video.canPlayType('application/vnd.apple.mpegurl')){
+                                  video.src = streamURL;
+                                  video.addEventListener('loadedmetadata', function(){
+                                  video.play();
+                                });
+                                } 
+                                else{
+                                  setStatus("HLS Not Supported", "red");
+                                }
+                              }
+
+                              function unmute(){
+                                video.muted = false;
+                                video.volume = 1.0;
+                                video.play();
+                              }unmute()
+
+                              // Auto unmute after first interaction
+                              document.body.addEventListener("click", function(){
+                                video.muted = false;
+                              }, { once: true });
+
+                              // Start
+                              loadStream();
+
+
+                              document.querySelector("span.sarver").innerText = e.children[2].value;
+                              document.querySelectorAll("div#sarver1").forEach(sarver1=>{
+                                sarver1.style.display = 'none';
+                              });
+                              document.querySelector(".min-sarver").children[0].style.display = 'flex';
+                              document.querySelector(".min-sarver").children[0].children[0].children[1].children[1].style.display = 'none';
+                              document.querySelector("span.sarver img").style.display="block";
+                              document.querySelector("span.sarver img").src = './img/sarver/sarver.gif';
+                              document.querySelector("span.playBTN img").src = e.children[0].children[0].src;
+                              window.scrollTo(0, 0);
+                            }linksAPI()
+
+                          }else if(e.children[3].value == "links"){
+                            document.querySelector("video#video").src = "";
+                            document.querySelector(".player-container").style.display="none";
+                            document.querySelector("iframe#soop_player_video").style.display="block";
+                            document.querySelector("iframe#soop_player_video").src = e.children[1].value;
+                            document.querySelector("span.sarver").innerText = e.children[2].value;
+                            document.querySelectorAll("div#sarver1").forEach(sarver1=>{
+                              sarver1.style.display = 'none';
+                            });
+                            document.querySelector(".min-sarver").children[0].style.display = 'flex';
+                            document.querySelector(".min-sarver").children[0].children[0].children[1].children[1].style.display = 'none';
+                            document.querySelector("span.sarver img").style.display="block";
+                            document.querySelector("span.sarver img").src = './img/sarver/sarver.gif';
+                            document.querySelector("span.playBTN img").src = e.children[0].children[0].src;
+                            window.scrollTo(0, 0);
+
+                          }
+                          
                         })
                       })
                   });
@@ -1823,7 +2002,7 @@ function displayPosts() {
         }
       });
     }
-    //noElements();
+    noElements();
   </script>
 </body>
 </html>
