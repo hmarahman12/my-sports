@@ -1738,26 +1738,26 @@ function displayPosts() {
                                       video.play().catch(()=>{});
                                     });
 
-                                  hls.on(Hls.Events.ERROR, function(event, data){
+                                    hls.on(Hls.Events.ERROR, function(event, data){
 
-                                  if(data.fatal){
-                                    switch(data.type){
-                                      case Hls.ErrorTypes.NETWORK_ERROR:
-                                        setStatus("Network Error... Retrying", "orange");
-                                        retry();
-                                      break;
+                                    // if(data.fatal){
+                                    //   switch(data.type){
+                                    //     case Hls.ErrorTypes.NETWORK_ERROR:
+                                    //       setStatus("Network Error... Retrying", "orange");
+                                    //       retry();
+                                    //     break;
 
-                                      case Hls.ErrorTypes.MEDIA_ERROR:
-                                        setStatus("Fixing Media Error...", "yellow");
-                                        // hls.recoverMediaError();
-                                      break;
+                                    //     case Hls.ErrorTypes.MEDIA_ERROR:
+                                    //       setStatus("Fixing Media Error...", "yellow");
+                                    //       // hls.recoverMediaError();
+                                    //     break;
 
-                                      default:
-                                        setStatus("Reloading...", "red");
-                                        retry();
-                                      break;
-                                    }
-                                  }
+                                    //     default:
+                                    //       setStatus("Reloading...", "red");
+                                    //       retry();
+                                    //     break;
+                                    //   }
+                                    // }
 
                                   });
 
