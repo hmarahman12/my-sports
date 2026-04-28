@@ -51,12 +51,13 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            justify-content: space-around;
         }
         .upload-head img {
             height: 250px;
             padding: 5px 0;
         }
-        input ,select#match_type{
+        input, select#match_type, select#channel_type{
             border: none;
             border: 1px solid #979797;
             border-radius: 3px;
@@ -218,7 +219,7 @@
         width: 0;
       }
       .usersViwe {
-        width: 155px;
+        width: 167px;
         top: 0;
         margin: 5px 0;
         background: #272727;
@@ -226,17 +227,13 @@
         z-index: 99999;
       }
       .usersViwe.y{
-        left: 181px;
+        left: 190px;
       }
       .usersViwe span{
-        font-size: 19px;
+        font-size: 20px;
       }
-
-        span.count {
-            font-size: 40px;
-        }
       .usersViwe i{
-        font-size: 22px;
+        font-size: 25px;
         top: 8px;
         color: #d7d7d7;
       }
@@ -341,9 +338,9 @@
       <span class="vew"></span>
     </div>
     <div class="containerr"></div>
-    <!-- <div id="containerr_1" class="containerr"></div>
+    <div id="containerr_1" class="containerr"></div>
     <div id="containerr_2" class="containerr"></div>
-    <div id="containerr_3" class="containerr"></div> -->
+    <div id="containerr_3" class="containerr"></div>
 
     <script src= "https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
 <script type="module">
@@ -633,9 +630,12 @@ document.querySelector("i#chanels").addEventListener('click', function(){
           <div class="upload-head">
             <h3>TV Channels</h3>
             <input id="title" type="text" placeholder="Title" required>
-            <img id="img" src="../Learn.png" alt="">
             <input id="tvimg" type="text" placeholder="TV Channel IMG" required>
             <input id="Sourcescode" type="text" placeholder="TV Channel Link" required>
+            <select id="channel_type">
+              <option value="links">Link</option>
+              <option value="api">API</option>
+            </select>
             <input id="submit" class="submit" type="submit" value="Submit">
             <span class="sc"></span>
           </div>
@@ -645,6 +645,7 @@ document.querySelector("i#chanels").addEventListener('click', function(){
         const title = document.querySelector("input#title").value;
         const tvimg = document.querySelector("input#tvimg").value;
         const Sourcescode = document.querySelector("input#Sourcescode").value;
+        const lianksType = document.querySelector("#channel_type").value;
 
 
         if(!title == "" || !fullcode == ""){
@@ -657,7 +658,8 @@ document.querySelector("i#chanels").addEventListener('click', function(){
             set(ref(db, "ChannelList/" + title),{
               ChannelName : title,
               ChannelImg : tvimg,
-              ChannelLink : Sourcescode
+              ChannelLink : Sourcescode,
+              lianksType : lianksType
             })
 
           }, 2000);
@@ -726,7 +728,7 @@ document.querySelector("span#news").addEventListener('click', function(){
       <div class="liveAll">
         <a href="https://my-sports.live/" target="_blank"><img id="livematch" src="https://live.staticflickr.com/65535/51503128122_400a372a5b_b.jpg" alt=""></a>
 
-        <a href="https://my-sports.live/adminNEWS/" target="_blank"><img id="livematch" src="https://w7.pngwing.com/pngs/678/286/png-transparent-news-24-24-7-service-television-channel-news-broadcasting-others-television-blue-text-thumbnail.png" alt=""></a>
+        <a href="https://my-sports.live/admin/news" target="_blank"><img id="livematch" src="https://w7.pngwing.com/pngs/678/286/png-transparent-news-24-24-7-service-television-channel-news-broadcasting-others-television-blue-text-thumbnail.png" alt=""></a>
       </div>
     </div>
   `;
@@ -1022,7 +1024,4 @@ function RetData() {
 
     </script>
 </body>
-
 </html>
-
-
