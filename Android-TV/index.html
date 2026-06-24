@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android TV</title>
+  <link rel="icon" href="./img/logo.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .navbar {
+      padding: 18px 0;
+      background: #ffffff;
+      box-shadow: 0 2px 25px rgb(0 0 0 / 52%);
+    }
+
+    .navbar-brand {
+      font-size: 30px;
+      font-weight: 700;
+      color: #2563eb !important;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      margin-left: 10px;
+      color: #334155 !important;
+    }
+
+    li.nav-item a.nav-link {
+      border: 1px solid #078fff;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .info {
+      width: 140px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .name-img {
+      display: flex;
+      align-items: center;
+    }
+
+    div#profile {
+      display: flex !important;
+      align-items: center;
+    }
+
+    div#profile img {
+      width: 40px;
+      border: 1px solid #0097ff;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .hero {
+      padding: 100px 0;
+      background: linear-gradient(135deg, #eef2ff, #ffffff);
+    }
+
+    .hero h1 {
+      font-size: 62px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #475569;
+      margin-bottom: 30px;
+    }
+
+    .hero img {
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary-custom {
+      background: #2563eb;
+      color: white;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-weight: 600;
+      border: none;
+      transition: 0.3s;
+    }
+
+    .btn-primary-custom:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .section-title {
+      margin-bottom: 60px;
+    }
+
+    .section-title h2 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: #64748b;
+    }
+
+    .feature-card,
+    .course-card,
+    .testimonial-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 5px 20px rgb(0 0 0 / 37%);
+      transition: 0.3s;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .feature-card:hover,
+    .course-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 15px;
+      background: #dbeafe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    .course-card img {
+      border-radius: 15px;
+      margin-bottom: 20px;
+      height: 220px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .stats {
+      background: linear-gradient(135deg, #2563eb, #1e3a8a);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 700;
+    }
+
+    .testimonial-card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      border: 1px double #0043ff;
+      box-shadow: 0px 0px 16px -4px;
+    }
+
+    footer {
+      background: #0f172a;
+      color: white;
+      padding: 5px 0;
+      letter-spacing: 1px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    a.navbar-brand img {
+      width: 120px;
+      height: 80px;
+      border: 1px solid #a5a5a5;
+      border-radius: 3px;
+    }
+
+    span#year {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+      }
+
+      .form{
+      display:none;
+      animation:fade .5s;
+      }
+
+      .form.active{
+      display:block;
+      }
+
+      input{
+      width:100%;
+      padding:12px;
+      margin:10px 0;
+      border:1px solid #ddd;
+      border-radius:10px;
+      font-size:16px;
+      outline:none;
+      }
+
+      button{
+      width:100%;
+      padding:12px;
+      margin: 10px 0;
+      border:none;
+      border-radius:10px;
+      background:#4facfe;
+      color:#fff;
+      font-size:16px;
+      cursor:pointer;
+      }
+
+      button:hover{
+      background:#008cff;
+      }
+
+      .switch{
+      text-align:center;
+      margin-top:15px;
+      }
+
+      .switch span{
+      color:#4facfe;
+      font-weight:bold;
+      cursor:pointer;
+      }
+
+      .msg{
+      text-align:center;
+      margin-top:10px;
+      font-family: Arial,sans-serif;
+      }
+
+      section#signupLogin {
+        width: 90%;
+        position: absolute;
+        left: 5%;
+        top: -50px;
+        background: #ffffffc7;
+        box-shadow: 0px 0px 20px 5px #959595;
+        border-radius: 3px;
+      }
+      .top{
+        top: 150px !important;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: center;
+      }
+      .footer p ,.footer p.mt-1{
+        margin: 0 !important;
+      }
+    @keyframes fade{
+      from{
+      opacity:0;
+      transform:translateY(15px);
+      }
+      to{
+      opacity:1;
+      transform:translateY(0);
+      }
+    }
+
+    @media(max-width: 768px) {
+      nav .container {
+        flex-wrap: unset !important;
+      }
+      div#navbarNav ul {
+        flex-direction: column-reverse;
+      }
+      li.nav-item {
+        margin-top: 2px;
+        font-size: 12px;
+        text-align: center;
+      }
+      button.logout {
+        font-size: 15px;
+        padding: 3px;
+        background: #fff;
+        color: #4facfe;
+        border: 1px solid;
+        font-family: monospace;
+        border-radius: 3px;
+      }
+      .info{
+        width: 100px;
+        font-size: 10px;
+      }
+      .hero {
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+      }
+      a.navbar-brand img{
+        width: 60px;
+        height: 40px;
+      }
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <style>
+    .statuse {
+      font-size: 20px;
+      background: #ffdbdb;
+      color: #ff0000;
+      text-align: center;
+      border: 1px solid #ff0000;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .statuseActive {
+      background: #dbffdb;
+      color: green;
+      border: 1px solid green;
+    }
+
+    .container.py-5 {
+      position: relative;
+      margin: 30px auto;
+    }
+    .courses-active {
+      border: 1px solid #3affffc7;
+      padding: 5px;
+      position: absolute;
+      border-radius: 5px;
+      top: 0;
+      background: #fff;
+    }
+    .courses-active h2 {
+      text-decoration: underline;
+      margin-top: 7px;
+      margin-bottom: -10px;
+    }
+    .courses-active h3 {
+      text-align: center;
+      margin-top: 30px;
+    }
+    span.back1 {
+      position: absolute;
+      top: -6px;
+      right: 12px;
+      font-size: 30px;
+      transform: rotate(45deg);
+    }
+
+    span.back2 {
+      position: absolute;
+      top: -6px;
+      left: 12px;
+      font-size: 30px;
+      transform: rotate(322deg);
+    }
+    .courses-active img{
+      width: 200px;
+      margin: auto;
+      display: block;
+    }
+    .backbtn {
+      width: 35px;
+      height: 35px;
+      background: #ffe1e1;
+      border: 1px solid #fd7878;
+      border-radius: 50%;
+      position: absolute;
+      right: 0;
+      top: -1px;
+      cursor: pointer;
+    }
+    .number-copy {
+      display: flex;
+      border: 1px solid #c3c3c3;
+      align-items: center;
+      height: 50px;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    .number-copy input {
+      border: none;
+    }
+    .number-copy span {
+      background: #5e98e1;
+      padding: 8px;
+      color: #fff;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .courceHideen {
+      background: #ffc4c4;
+      font-size: 15px;
+      color: #fb1d1d;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .statuse.Active {
+      background: #3fbb54;
+      color: #fff;
+      border: 1px solid;
+    }
+    .msgicon {
+      width: 50px;
+      height: 50px;
+      position: fixed;
+      right: 10px;
+      bottom: 25%;
+      cursor: pointer;
+    }
+    .msgicon img{
+      width: 100%;
+      height: 100%;
+    }
+
+    .chat-container{
+      width:100%;
+      max-width:400px;
+      margin: 20px auto;
+      height:600px;
+      background:#fff;
+      border-radius:15px;
+      overflow:hidden;
+      box-shadow:0 5px 20px rgba(0,0,0,0.15);
+      display:flex;
+      flex-direction:column;
+    }
+
+    .chat-header{
+        background:#0084ff;
+        color:#fff;
+        text-align:center;
+        padding:15px;
+        font-size:20px;
+        font-weight:bold;
+    }
+
+    .chat-box{
+        flex:1;
+        padding:15px;
+        overflow-y:auto;
+        background:#e5ddd5;
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .message{
+        max-width:75%;
+        padding:10px 15px;
+        border-radius:15px;
+        word-wrap:break-word;
+    }
+
+    .sent{
+        align-self:flex-end;
+        background:#0084ff;
+        color:white;
+    }
+
+    .received{
+        align-self:flex-start;
+        background:white;
+        color:black;
+    }
+
+    .chat-input{
+        display:flex;
+        padding:10px;
+        background:#fff;
+        border-top:1px solid #ddd;
+    }
+
+    .chat-input input{
+      width: unset !important;
+      flex:1;
+      padding:12px;
+      border:1px solid #ccc;
+      border-radius:25px;
+      outline:none;
+    }
+
+    .chat-input button{
+        margin-left:10px;
+        padding:12px 18px;
+        border:none;
+        background:#0084ff;
+        color:#fff;
+        border-radius:25px;
+        cursor:pointer;
+    }
+
+    .chat-input button:hover{
+        background:#006fe0;
+    }
+    .msg.me {
+      background: #2aa6ff;
+      padding: 5px;
+      border-radius: 3px;
+      font-size: 15px;
+      text-align: end;
+    }
+    .msg.other {
+      background: #ffffff;
+      padding: 5px;
+      font-size: 15px;
+      text-align: justify;
+    }
+    @media(max-width:500px){
+        .chat-container{
+            width:100%;
+            height:100vh;
+            border-radius:0;
+        }
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href=""><img src="https://img.icons8.com/fluent/1200/android-tv.jpg" alt=""></a>
+      <div class="dashBord"></div>
+
+      <div class="nav-menuandButoon">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link" href="">Home</a></li>
+            <li class="nav-item"><a class="nav-link">Contacts US</a></li>
+            <li class="nav-item"><a href="#About" class="nav-link">About</a></li>
+            <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+              <div id="signupBTN" class="btn btn-primary-custom">Android TV</div>
+              <!-- PROFILE -->
+
+              <div class="profile" id="profile" style="display: none  !important;">
+                <div class="name-img">
+                  <div class="info">
+                  <span><b>Name : </b><span id="showName"></span></span>
+                  <span><b>ID : </b><span id="showPhone"></span></span>
+                  </div>
+                  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+                </div>
+                <a href=""><button class="logout" onclick="logout()">Logout</button></a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero sectionnone">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 hero">
+          <h1>Android TV</h1>
+          <h3>TV Apps || Android TV All Software Download</h3>
+          <a id="signuplink" class="btn btn-primary-custom">Android TV</a>
+        </div>
+
+        <div class="col-lg-6">
+          <img class="img-fluid"
+            src="https://www.smarttech-tv.com/image/catalog/blog/blog_android%20tv/android%20blog1.png"
+            alt="Android TV">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <section class="py-5 dashboard bg-white" id="logincourses" style="display: none;">
+    <div class="container py-5">
+      <div class="section-title text-center">
+        <h2>Secure Software Development</h2>
+        <p>Free not available android tv apps. Only perses in Android TV app available</p>
+      </div>
+
+      <div id="courseList" class="row g-4">
+
+      </div>
+
+      <!-- courses-active -->
+      <div class="courses-active"></div>
+    </div>
+  </section>
+
+
+
+  <section class="py-5 dashboard bg-white" id="courses">
+    <div class="container py-5">
+      <div class="section-title text-center">
+        <h2>Secure Software Development</h2>
+        <p>Free not available android tv apps. Only perses in Android TV app available</p>
+      </div>
+
+      <div id="courseList" class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="course-card">
+            <img src="https://www.gstatic.com/youtube/img/promos/growth/YTP_logo_social_1200x630.png?days_since_epoch=20621" alt="Android TV YouTube">
+            <input type="text" hidden value="Android TV YouTube">
+            <h4>Android TV YouTube</h4>
+            <p>Software</p>
+            <div class="price">TK : 300</div>
+            <div class="statuse">Perses</div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="course-card">
+            <img src="https://play-lh.googleusercontent.com/73XjQveHa_U1RhzlveYI_Vd1l3eO4U-9zQaQ4OyF_sV02ohNeJp8tZExWxHtPEQZens0GgqoVKhrFmxoOH0W=w526-h296-rw" alt="Android TV Sports">
+            <input type="text" hidden value="Android TV Sports">
+            <h4>Android TV Sports</h4>
+            <p>Software</p>
+            <div class="price">TK : 350</div>
+            <div class="statuse">Perses</div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="course-card">
+            <img src="https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/11/garena-free-fire-the-15-best-characters-ranked.jpg?w=1600&h=900&fit=crop" alt="Android TV Free-Fire">
+            <input type="text" hidden value="Android TV Free-Fire">
+            <h4>Android TV Free-Fire</h4>
+            <p>Software</p>
+            <div class="price">TK : 100</div>
+            <div class="statuse">Perses</div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="course-card">
+            <img src="https://gamesbeat.com/wp-content/uploads/2025/05/PUBGM.jpg" alt="Android TV PUBG">
+            <input type="text" hidden value="Android TV PUBG">
+            <h4>Android TV PUBG</h4>
+            <p>Software</p>
+            <div class="price">TK : 100</div>
+            <div class="statuse">Perses</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- courses-active -->
+      <div class="courses-active"></div>
+    </div>
+  </section>
+
+  <section class="py-5 sectionnone" id="signupLogin">
+    <div class="container">
+
+    <!-- SIGNUP -->
+
+    <div class="form" id="signup">
+      <div class="backbtn">
+        <span class="back1">|</span>
+        <span class="back2">|</span>
+      </div>
+
+    <h2>Sign UP</h2>
+
+    <input type="text" id="fullname" placeholder="Full Name">
+
+    <input type="text" id="phone" placeholder="Phone Number">
+
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signup()">
+    Create Account
+    </button>
+
+    <div class="msg" id="signupMsg"></div>
+
+    <div class="switch">
+    Already have account?
+    <span onclick="showLogin()">Login</span>
+    </div>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div class="form" id="login">
+      <div class="backbtn">
+        <span class="back1">|</span>
+        <span class="back2">|</span>
+      </div>
+    <h2>Login</h2>
+
+    <input type="tel" id="loginPhone"
+    placeholder="Phone Number">
+
+    <input type="password"
+    id="loginPassword"
+    placeholder="Password">
+
+    <button onclick="login()">
+    Login
+    </button>
+
+    <div class="msg" id="loginMsg"></div>
+
+    <div class="switch">
+    Don't have account?
+    <span onclick="showSignup()">Sign Up</span>
+    </div>
+
+    </div>
+    </div>
+  </section>
+  <section class="py-5" id="testimonial">
+    <div class="container py-5" id="About">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="testimonial-card text-center">
+            <div class="section-title text-center">
+              <h2>About</h2>
+              <p>Software process is the step-by-step method used to build, test, and maintain software products.</p>
+            </div>
+            <p>“A software process is a structured set of activities used to design, develop, test, deploy, and maintain software applications. It helps teams create high-quality software efficiently by following defined steps such as planning, requirements gathering, coding, testing, and maintenance.”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <div class="msg">
+      <div class="msgicon"><img src="./img/msg.webp" alt=""></div>
+      <div class="msgBody" style="display: none;" id="adminSupport">
+        <div class="chat-container">
+          <div class="chat-header">Admin Support</div>
+
+          <div class="chat-box" id="chatBox">
+          </div>
+
+          <div class="chat-input">
+              <input type="text" id="messageInput" placeholder="Type a message...">
+              <button id="send">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <footer class="text-center">
+    <div class="container">
+      <h4 class="mb-1">AR Technongy</h4>
+      <div class="footer">
+        <p>AR Technongy Teams </p>
+        <p class="mt-1 mb-0"> : © 2024 -  <span id="year"></span> All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const counters = document.querySelectorAll('[data-target]');
+
+    counters.forEach((counter,index)=>{
+
+        const updateCounter=()=>{
+
+            const target=+counter.getAttribute('data-target');
+
+            // remove % before calculation
+            const count=parseInt(counter.innerText);
+
+            const increment=target/100;
+
+            if(count<target){
+                const value=Math.ceil(count+increment);
+                // add % only to 3rd child
+                counter.innerText=
+                index===3 ? value + " %" : value;
+                setTimeout(updateCounter,20);
+            }else{
+                counter.innerText=
+                index===3 ? target + " %" : target;
+            }
+        }
+        updateCounter();
+    });
+
+    // Auto update year
+    document.getElementById("year").textContent =
+    new Date().getFullYear();
+  </script>
+
+  <script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {getDatabase,ref,set,get,update,onValue,push,child,onChildAdded}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBlgIw3OvEbgf9PCMPuI6mRzld8JJaq0qE",
+  authDomain: "androidtv-8c007.firebaseapp.com",
+  projectId: "androidtv-8c007",
+  storageBucket: "androidtv-8c007.firebasestorage.app",
+  messagingSenderId: "106458035229",
+  appId: "1:106458035229:web:01050b19019432882d42f4",
+  measurementId: "G-GYE7L2H7TM"
+};
+
+
+const app=initializeApp(firebaseConfig);
+
+const db=getDatabase(app);
+
+
+window.showLogin=function(){
+
+document.getElementById("signup")
+.classList.remove("active");
+
+document.getElementById("login")
+.classList.add("active");
+
+}
+
+
+window.showSignup=function(){
+
+document.getElementById("login")
+.classList.remove("active");
+
+document.getElementById("signup")
+.classList.add("active");
+
+}
+
+window.signup=async function(){
+
+let name = document.getElementById("fullname").value;
+
+let phone = document.getElementById("phone").value;
+
+let pass = document.getElementById("password").value;
+
+if(name == "" || phone == "" || pass == "" ){
+
+signupMsg.innerHTML="Fill all fields";
+
+signupMsg.style.color="red";
+
+return;
+
+}try{
+
+await set(
+ref(db,"users/"+phone),
+{
+
+fullname:name,
+phone:phone,
+password:pass
+
+}
+);
+
+signupMsg.innerHTML=
+"Account Created";
+
+signupMsg.style.color=
+"green";
+
+
+setTimeout(()=>{
+
+showLogin()
+
+},1000)
+
+
+}catch(error){
+
+signupMsg.innerHTML=error.message;
+
+}
+
+}
+
+window.login=async function(){
+
+  let phone=document.getElementById("loginPhone").value;
+
+  let pass=document.getElementById("loginPassword").value;
+
+
+  const dbRef=ref(db);
+
+
+  try{const snapshot=await get(child(dbRef,"users/"+phone));
+
+
+  if(snapshot.exists()){
+
+    let data=snapshot.val();
+
+
+    if(data.password===pass){
+      localStorage.setItem("user",JSON.stringify(data));
+
+        document.getElementById("login").style.display="none";
+
+
+        document.getElementById("profile").style.display="block";
+        document.getElementById("signupBTN").style.display="none";
+        document.getElementById("signupLogin").classList.remove("top");
+
+
+        document.getElementById("showName").innerHTML=data.fullname;
+
+
+        document.getElementById("showPhone").innerHTML=data.phone;
+      
+        function bodyclear(){
+          document.querySelectorAll(".sectionnone").forEach((sitem)=>{
+            sitem.style.display="none";
+          })
+        }bodyclear();
+
+        
+    }else{
+      loginMsg.innerHTML="Wrong password or Number";
+
+      loginMsg.style.color="red";
+    }
+
+}else{
+
+loginMsg.innerHTML="No account found";
+
+loginMsg.style.color="red";
+
+}
+
+}catch(error){
+
+loginMsg.innerHTML=
+error.message;
+
+}
+
+}
+
+
+
+window.logout=function(){
+
+localStorage.removeItem("user");
+
+document.getElementById("profile").style.display="none  !important";
+
+
+document.getElementById("login").style.display="block";
+
+};
+
+window.onload=function(){
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if(user){
+
+    document.getElementById("signup").style.display="none";
+    document.getElementById("login").style.display="none";
+    document.getElementById("signupBTN").style.display="none";
+    document.getElementById("profile").style.display="block";
+    showName.innerHTML=user.fullname;
+    showPhone.innerHTML=user.phone;
+
+    function bodyclear(){
+        document.querySelectorAll(".sectionnone").forEach((sitem)=>{
+          sitem.style.display="none";
+        })
+    }bodyclear();
+    
+    
+    function allCourses(){
+      document.querySelector("#courses").style.display="none";
+      document.querySelector("#logincourses").style.display="block";
+      const courseList = document.querySelector("#courseList");
+
+      onValue(ref(db, "courseTitle/"), (snapshot) => {
+          courseList.innerHTML = "";
+          
+
+          if (!snapshot.exists()) {
+              courseList.innerHTML = `
+              <div class="course-card">
+                  <span colspan="4" style="text-align:center;">
+                      No users found
+                  </span>
+              </div>`;
+              return;
+          }
+
+          let totalCours = 0;
+
+          snapshot.forEach((child) => {
+            
+              totalCours++;
+              
+              const courses = child.val();
+
+              courseList.innerHTML += `
+              <div id="allcourses" class="col-md-6 col-lg-4">
+                <div class="course-card">
+                  <img src="${courses.coursesImg}" alt="${courses.title}">
+                  <input type="text" hidden value="${courses.title}">
+                  <h4>${courses.title}</h4>
+                  <p>${courses.subTitle}</p>
+                  <div class="price">TK : ${courses.price}</div>
+                  <input type="text" hidden value="${courses.price}">
+                  <div class="statuse ${courses.status}" data-id="${child.key}">${courses.status}</div>
+                </div>
+              </div>
+              `;
+          });
+
+
+          function courses(){
+            document.querySelectorAll(".course-card").forEach((sitem)=>{
+                sitem.addEventListener('click', function(){
+                  window.scrollTo(0, 0);
+                  document.querySelector(".courses-active").style.width = "100%";
+
+                  function paid(){
+                    document.querySelector(".courses-active").innerHTML = `
+                      <div class="backbtn">
+                        <span class="back1">|</span>
+                        <span class="back2">|</span>
+                      </div>
+                      <h2>By Software</h2>
+                      <h3>${sitem.children[1].value}</h3>
+                      <img id="courseimg" src="${sitem.children[0].src}" alt="">
+                      <input type="text" class="brandType" placeholder="Setup Box or Smart TV">
+                      <input type="text" readonly class="setId" hidden value="${ user.phone}">
+                      <input type="text" readonly class="setName" hidden value="${ user.fullname}">
+                      <input type="text" class="brandModel" placeholder="Name & model">
+                      <input type="text" placeholder="Enter Your Phone Number" id="yourphoneNumber">
+                      <input type="text" class="coursesName" readonly value="${sitem.children[1].value}">
+                      <input type="text" class="coursesPrice" readonly value="${sitem.children[5].value + " : TK"}">
+                      <input type="text" class="setCoursesName" readonly hidden value="${sitem.children[1].value}">
+                      <div class="number-copy">
+                        <input readonly type="text" id="phoneNumber" value="Payment : 01767767606">
+                        <span id="copy">Copy</span>
+                      </div>
+                      <div class="number-copy">
+                        <input type="text" id="transitionId" placeholder="Paste Transition Id">
+                        <span id="paste">Paste</span>
+                      </div>
+                      <button>Confirm</button>
+                      <div class="courceHideen"></div>
+                    `;
+
+                    
+                    function copyText(){
+                      document.querySelector("#copy").addEventListener('click', function(){
+                        // Get the text field
+                        var copyText = document.getElementById("phoneNumber");
+
+                        // Select the text field
+                        copyText.select();
+                        copyText.setSelectionRange(0, 99999); // For mobile devices
+
+                        // Copy the text inside the text field
+                        navigator.clipboard.writeText(copyText.value);
+                        document.querySelector("#copy").innerHTML = "Copied";
+                      
+                      });
+                    }copyText();
+                    
+                    function pasteText(){
+                      const pasteButton = document.querySelector('span#paste');
+
+                      pasteButton.addEventListener('click', async () => {
+                        try {
+                          const text = await navigator.clipboard.readText()
+                          document.querySelector('input#transitionId').value += text;
+                          console.log('Text pasted.');
+                        } catch (error) {
+                          console.log('Failed to read clipboard');
+                        }
+                      });
+                    }pasteText();
+
+                    function coursescload(){
+                      document.querySelector(".backbtn").addEventListener('click', function(){
+                        document.querySelector(".courses-active").style.width = "0";
+                        document.querySelector(".courses-active").innerHTML = "";
+                      })
+                    }coursescload();
+
+                    function request(){
+                      document.querySelector(".courses-active button").addEventListener('click', function(){
+                        const brandType = document.querySelector(".brandType").value;
+                        const brandModel = document.querySelector(".brandModel").value;
+                        const profileName = document.querySelector(".setName").value;
+                        const profileID = document.querySelector(".setId").value;
+                        const phoneNumber = document.querySelector("#yourphoneNumber").value;
+                        const course = document.querySelector(".setCoursesName").value;
+                        const coursesImg = document.querySelector("#courseimg").src;
+                        const transictionID = document.querySelector("#transitionId").value;
+
+                        if(phoneNumber !== ""){
+                          if(transictionID !== ""){
+                            setTimeout(() => {
+
+                              
+
+                              const newUserRef = push(ref(db, "reqouest"));
+
+                                set(newUserRef, {
+                                  brandType : brandType,
+                                  brandModel : brandModel,
+                                  profileName : profileName,
+                                  profileID : profileID,
+                                  phoneNumber : phoneNumber,
+                                  course : course,
+                                  coursesImg : coursesImg,
+                                  transictionID : transictionID,
+                              });
+                                    
+                              document.querySelector(".courses-active button").innerHTML = "Confirmd";
+                              document.querySelector(".courceHideen").style.display = "none";
+                            }, 1000);
+                          }else{
+                            document.querySelector(".courceHideen").style.display = "block";
+                            document.querySelector(".courceHideen").innerHTML = "Enter Your Transiction ID";
+                          }
+                        }else{
+                          document.querySelector(".courceHideen").style.display = "block";
+                          document.querySelector(".courceHideen").innerHTML = "Enter Your Phone Number";
+                        }
+                      })
+
+                    }request();
+                  }paid();
+                  
+                })
+
+              });
+
+            function dashboardShow(){
+              onValue(ref(db, "coursesAcctivided/" + user.phone), (snapshot) => {
+                // courseList.innerHTML = "";
+                
+
+                if (!snapshot.exists()) {
+                    
+                    return;
+                }
+
+                snapshot.forEach((child) => {
+                    
+                    const courses = child.val();
+                    document.querySelector(".dashBord").innerHTML = `<button>Dashboard</button>`;
+
+                    document.querySelector(".dashBord button").addEventListener('click', function(){
+                      if(user=="Null"){
+                        location.replace("http://127.0.0.1:5500/");
+                      }else{
+                        location.replace("http://127.0.0.1:5500/Dashboard/");
+                      }
+                    })
+                    
+                })
+              })
+            }dashboardShow();
+
+            function adminSupport(){
+              document.querySelector(".msgicon").addEventListener('click', function(){
+                var x = document.querySelector(".msgBody");
+                if (x.style.display === "none") {
+                  x.style.display = "block";
+
+                  window.location.href = window.location.href + "#adminSupport";
+                  
+                } else {
+                  window.location.href = '';
+                  x.style.display = "none";
+                }
+              });
+
+                  const uid = user.phone;
+                  const adminId = "Admin";
+
+                  const roomId = [uid, adminId].sort().join("_");
+
+                  const chatRef = ref(db, "chats/" + roomId);
+
+                  const chatBox = document.getElementById("chatBox");
+                  const messageInput = document.getElementById("messageInput");
+                  const sendBtn = document.getElementById("send");
+
+                  function sendMessage() {
+
+                      const text = messageInput.value.trim();
+
+                      if (!text) return;
+
+                      push(chatRef, {
+                          sender: uid,
+                          receiver: adminId,
+                          text: text,
+                          time: Date.now()
+                      });
+
+                      messageInput.value = "";
+                    
+
+                      set(ref(db, "supportUsers/" + uid), {
+                          phone: uid,
+                          lastMessage: text,
+                          lastTime: Date.now()
+                      });
+                  }
+
+                  sendBtn.onclick = sendMessage;
+
+                  onChildAdded(chatRef, (snap) => {
+
+                      const msg = snap.val();
+
+                      const div = document.createElement("div");
+
+                      div.className = msg.sender === uid
+                          ? "msg me"
+                          : "msg other";
+
+                      div.innerHTML = msg.text;
+
+                      chatBox.appendChild(div);
+
+                      chatBox.scrollTop = chatBox.scrollHeight;
+                  });
+              }
+
+              adminSupport();
+
+        }courses();
+
+      });
+
+    }allCourses();
+
+
+
+  }else if(!user){
+    document.querySelectorAll(".statuse").forEach(singleStatuse => {
+      singleStatuse.addEventListener('click', function(){
+        document.getElementById("signup").classList.toggle("active");
+        document.getElementById("signupLogin").classList.toggle("top");
+        window.scrollTo(0, 0);
+      })
+    
+    });
+    
+  }
+
+}
+
+function sltoggle(){
+  document.querySelector("#signupBTN").addEventListener('click', function(){
+    document.getElementById("signup").classList.toggle("active");
+    document.getElementById("signupLogin").classList.toggle("top");
+    window.scrollTo(0, 0);
+  });
+
+  document.querySelector("a#signuplink").addEventListener('click', function(){
+    document.getElementById("signup").classList.toggle("active");
+    document.getElementById("signupLogin").classList.toggle("top");
+    window.scrollTo(0, 0);
+  });
+
+  document.querySelector("div#signup div.backbtn").addEventListener('click', function(){
+    document.querySelector("div#signup").classList.toggle("active");
+    document.querySelector("section#signupLogin").classList.toggle("top");
+    
+  });
+
+  document.querySelector("div#login div.backbtn").addEventListener('click', function(){
+    document.querySelector("div#login").classList.toggle("active");
+    document.querySelector("section#signupLogin").classList.toggle("top");
+    
+  })
+
+}sltoggle()
+
+  
+</script>
+
+</body>
+</html>
