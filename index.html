@@ -1485,22 +1485,22 @@ function displayPosts() {
       
     })
     
-    // const today = new Date();
+    const today = new Date();
 
-    // const yesterday = new Date();
-    // yesterday.setDate(today.getDate() - 1); // subtract 1 day
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1); // subtract 1 day
 
-    // // Format yesterday's date
-    // const yesterdayFormatted = yesterday.toLocaleDateString();
-    // const todayDates = today.toLocaleDateString();
+    // Format yesterday's date
+    const yesterdayFormatted = yesterday.toLocaleDateString();
+    const todayDates = today.toLocaleDateString();
 
-    // const todayDate = todayDates.replace(/[/]/g, '');
-    // const yesterdayDate = yesterdayFormatted.replace(/[/]/g, '');
+    const todayDate = todayDates.replace(/[/]/g, '');
+    const yesterdayDate = yesterdayFormatted.replace(/[/]/g, '');
 
-    // // console.log(yesterdayDate);
-    // // console.log(todayDate);
+    // console.log(yesterdayDate);
+    // console.log(todayDate);
 
-    // // Upload to Firebase
+    // Upload to Firebase
     // async function uploadData() {
 
     //     const res = await fetch('https://api.ipify.org?format=json');
@@ -2245,7 +2245,7 @@ function displayPosts() {
           e.preventDefault();
         }
       });
-    }function noElements();
+    }noElements();
   </script>
 </body>
 </html>
