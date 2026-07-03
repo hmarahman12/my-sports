@@ -839,11 +839,11 @@ button:hover{
   <audio id="notifSound" src="https://www.myinstants.com/media/sounds/notification.mp3" preload="auto"></audio>
 
   <!-- Adsterra Ads -->
-  <div class="adsterReffarl adstera">
+  <!-- <div class="adsterReffarl adstera">
     <a target="_blank" href="https://beta.publishers.adsterra.com/referral/6bRS6rSK1q" rel="nofollow">
       <img src="https://landings-cdn.adsterratech.com/referralBanners/gif/468x60_adsterra_reff.gif" alt="banner" />
     </a>
-  </div>
+  </div> -->
   <div id="adstera" class="adstera" style="display: none;">
     <script>
       atOptions = {
@@ -1485,66 +1485,66 @@ function displayPosts() {
       
     })
     
-    const today = new Date();
+    // const today = new Date();
 
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1); // subtract 1 day
+    // const yesterday = new Date();
+    // yesterday.setDate(today.getDate() - 1); // subtract 1 day
 
-    // Format yesterday's date
-    const yesterdayFormatted = yesterday.toLocaleDateString();
-    const todayDates = today.toLocaleDateString();
+    // // Format yesterday's date
+    // const yesterdayFormatted = yesterday.toLocaleDateString();
+    // const todayDates = today.toLocaleDateString();
 
-    const todayDate = todayDates.replace(/[/]/g, '');
-    const yesterdayDate = yesterdayFormatted.replace(/[/]/g, '');
+    // const todayDate = todayDates.replace(/[/]/g, '');
+    // const yesterdayDate = yesterdayFormatted.replace(/[/]/g, '');
 
-    // console.log(yesterdayDate);
-    // console.log(todayDate);
+    // // console.log(yesterdayDate);
+    // // console.log(todayDate);
 
-    // Upload to Firebase
-    async function uploadData() {
+    // // Upload to Firebase
+    // async function uploadData() {
 
-        const res = await fetch('https://api.ipify.org?format=json');
-        const data = await res.json();
-        const ip = data.ip;
-        // console.log(ip);
+    //     const res = await fetch('https://api.ipify.org?format=json');
+    //     const data = await res.json();
+    //     const ip = data.ip;
+    //     // console.log(ip);
 
-      const ips = ip;
-      const noDots = ips.replace(/\./g, ""); // Remove all dots
-      //   console.log(noDots);
-      localStorage.setItem("Local_IP", noDots);
+    //   const ips = ip;
+    //   const noDots = ips.replace(/\./g, ""); // Remove all dots
+    //   //   console.log(noDots);
+    //   localStorage.setItem("Local_IP", noDots);
         
-      //   await set(ref(db, "activeUsers/monthly"), monthlyData);
-      //   await set(ref(db, "activeUsers/daily"), dailyData);
-      await set(ref(db, "TodayactiveUsers/" + todayDate + "/" + noDots), {
-        ip: ip
-      });
+    //   //   await set(ref(db, "activeUsers/monthly"), monthlyData);
+    //   //   await set(ref(db, "activeUsers/daily"), dailyData);
+    //   await set(ref(db, "TodayactiveUsers/" + todayDate + "/" + noDots), {
+    //     ip: ip
+    //   });
 
-      function ipChack(){
+    //   function ipChack(){
 
-            document.querySelector(".ip-match").innerHTML = `
-              <img id="clocse" src="https://png.pngtree.com/png-vector/20190417/ourmid/pngtree-vector-cross-icon-png-image_947234.jpg"/>
-              <iframe id="addsIframe" src="http://livetv.fit" width="100%" height="100%"></iframe>
-            `;
-      }ipChack();
+    //         document.querySelector(".ip-match").innerHTML = `
+    //           <img id="clocse" src="https://png.pngtree.com/png-vector/20190417/ourmid/pngtree-vector-cross-icon-png-image_947234.jpg"/>
+    //           <iframe id="addsIframe" src="http://livetv.fit" width="100%" height="100%"></iframe>
+    //         `;
+    //   }ipChack();
 
-      if(localStorage.getItem("users_add_Active") == 'Adds'){
-        setTimeout(() => {
-          document.querySelector(".ip-match").style.display='block';
-        }, 3600000);
-      }
-      document.querySelector("img#clocse").addEventListener('click', function(){
-        document.querySelector(".ip-match").style.display='none';
-        setTimeout(() => {
-          document.querySelector(".ip-match").style.display='block';
-        }, 3600000);
-      })
+    //   if(localStorage.getItem("users_add_Active") == 'Adds'){
+    //     setTimeout(() => {
+    //       document.querySelector(".ip-match").style.display='block';
+    //     }, 3600000);
+    //   }
+    //   document.querySelector("img#clocse").addEventListener('click', function(){
+    //     document.querySelector(".ip-match").style.display='none';
+    //     setTimeout(() => {
+    //       document.querySelector(".ip-match").style.display='block';
+    //     }, 3600000);
+    //   })
 
-      const day = today.getDate();
-      await set(ref(db, "RaningMonth/" + day + "/" + noDots), {
-        ip: ip
-      });
+    //   const day = today.getDate();
+    //   await set(ref(db, "RaningMonth/" + day + "/" + noDots), {
+    //     ip: ip
+    //   });
       
-    }
+    // }
 
 
 
