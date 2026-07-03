@@ -359,7 +359,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebas
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-import {getDatabase, child, get,update, remove, ref, set}from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+import {getDatabase, child, get,update, remove, ref,push, set}from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 
 const db = getDatabase();
 //upload funktion match type
@@ -479,13 +479,14 @@ document.querySelector("i#score").addEventListener('click', function(){
           <div class="upload-head">
             <h3>Match List</h3>
             <select id="match_type">
-              <option value="t20">T20</option>
+              <option value="test">TEST</option>
               <option value="odi">ODI</option>
+              <option value="t20">T20</option>
               <option value="ipl">IPL</option>
               <option value="bpl">BPL</option>
               <option value="leg">LUEG</option>
+              <option value="fifa">FIFA</option>
             </select>
-            <input id="number" type="number" placeholder="Match Number" required>
             <input id="teame_1" type="text" placeholder="Teame 1" required>
             <input id="teame_2" type="text" placeholder="Teame 2" required>
             <input id="date" type="text" placeholder="Date" required>
@@ -498,64 +499,88 @@ document.querySelector("i#score").addEventListener('click', function(){
       ////////////////////////Submited///////////////////////
       document.querySelector("input#submit").addEventListener ('click', function(){
         const match_type = document.querySelector("#match_type").value;
-
-        const match_number = document.querySelector("input#number").value;
         const teame_1 = document.querySelector("input#teame_1").value;
         const teame_2 = document.querySelector("input#teame_2").value;
         const date = document.querySelector("input#date").value;
         const time = document.querySelector("input#time").value;
 
 
-        if(!match_number == "" || !teame_1 == "" || !teame_2 == "" || !date == "" || !time == ""){
+        if( !teame_1 == "" || !teame_2 == "" || !date == "" || !time == ""){
           setTimeout(() => {
             document.querySelector(".sc").innerHTML = "Sucssfully";
-            document.querySelector("input#number").value = '';
             document.querySelector("input#teame_1").value = '';
             document.querySelector("input#teame_2").value = '';
             document.querySelector("input#date").value = '';
             document.querySelector("input#time").value = '';
 
-            if(match_type == 't20'){
-              set(ref(db, "t20/" + match_number),{
-                match_number : match_number,
-                teame_1 : teame_1,
-                teame_2 : teame_2,
-                date : date,
-                time : time
-              });
-            }else if(match_type == 'odi'){
-              set(ref(db, "odi/" + match_number),{
-                match_number : match_number,
-                teame_1 : teame_1,
-                teame_2 : teame_2,
-                date : date,
-                time : time
-              });
-            }else if(match_type == 'ipl'){
-              set(ref(db, "ipl/" + match_number),{
-                match_number : match_number,
-                teame_1 : teame_1,
-                teame_2 : teame_2,
-                date : date,
-                time : time
-              });
-            }else if(match_type == 'bpl'){
-              set(ref(db, "bpl/" + match_number),{
-                match_number : match_number,
-                teame_1 : teame_1,
-                teame_2 : teame_2,
-                date : date,
-                time : time
-              });
-            }else if(match_type == 'leg'){
-              set(ref(db, "league/" + match_number),{
-                match_number : match_number,
-                teame_1 : teame_1,
-                teame_2 : teame_2,
-                date : date,
-                time : time
-              });
-            }
+            function dataSet(){
+              const newPostRef = push(ref(db, "matchListUpcoming"));
+
+              if(match_type == "test"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://www.arabnews.com/sites/default/files/styles/n_670_395/public/2025/06/17/4612636-1765852285.jpg?itok=obH5MVPC',
+                  date : date,
+                  time : time
+                });
+              }else if(match_type == "odi"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRjOvOFQsTePCDCpNq67RjrulqxPvcl7Butd10k5UifR9BailsImM36DM&s=10',
+                  date : date,
+                  time : time
+                });
+              }else if(match_type == "t20"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://png.pngtree.com/png-vector/20221016/ourmid/pngtree-illustrated-ball-and-stump-in-pop-art-style-for-t20-cricket-vector-png-image_28465360.jpg',
+                  date : date,
+                  time : time
+                });
+              }else if(match_type == "ipl"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://images.template.net/334930/IPL-Logo-Template-edit-online-1.jpg',
+                  date : date,
+                  time : time
+                });
+              }else if(match_type == "bpl"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://mir-s3-cdn-cf.behance.net/projects/404/62bf3c239789839.Y3JvcCwzODM2LDMwMDEsNDg0LDA.jpg',
+                  date : date,
+                  time : time
+                });
+              }else if(match_type == "leg"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://tse-mm.bing.com/th?q=Big%20Bash%20Cricket%20download',
+                  date : date,
+                  time : time
+                });
+              }else if(match_type == "fifa"){
+                set(newPostRef, {
+                  teame_1 : teame_1,
+                  teame_2 : teame_2,
+                  match_type : match_type,
+                  match_logo : 'https://upload.wikimedia.org/wikipedia/en/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png',
+                  date : date,
+                  time : time
+                });
+              }
+            }dataSet();
 
           }, 2000);
         }else{
