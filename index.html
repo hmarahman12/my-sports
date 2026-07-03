@@ -368,15 +368,15 @@
     display: block;
   }
 
-  .team-dtls {
+  /* .team-dtls {
     display: flex !important;
     align-items: center;
     justify-content: space-around;
-  }
+  } */
 
-  .team-dtls div {
+  /* .team-dtls div {
     display: inline;
-  }
+  } */
 
   .team-1,.team-2 {
     font-size: 20px;
@@ -944,26 +944,6 @@ button:hover{
 
   <!-- match list -->
    <div class="match-list" style="display: none;">
-    <div class="Match_lists">
-      <img id="t20" src="./img/t20.jpg" alt="">
-      <input type="text" value="t20" hidden>
-    </div>
-    <div class="Match_lists">
-      <img id="odi" src="./img/odi.webp" alt="">
-      <input type="text" value="odi" hidden>
-    </div>
-    <div id="ipl" class="Match_lists">
-      <img src="https://bdixtv24.com/wp-content/uploads/2026/06/T-Sports-HD-Football-World-Cup-2026-185x256.png" alt="">
-      <input type="text" value="ipl" hidden>
-    </div>
-    <div id="bpl" class="Match_lists">
-      <img src="./img/bpl.png" alt="">
-      <input type="text" value="bpl" hidden>
-    </div>
-    <div id="league" class="Match_lists">
-      <img src="./img/league.jpg" alt="">
-      <input type="text" value="league" hidden>
-    </div>
 
     <div class="all-match-list" style="display: none;">
       
@@ -1497,6 +1477,7 @@ function displayPosts() {
       if(window.innerWidth <= 1000 && !isAndroidTV()){
         document.querySelector(".items-head").style.width="100%";
         
+        
       }
       setTimeout(() => {
         loadPosts();
@@ -1571,12 +1552,158 @@ function displayPosts() {
       document.querySelector("img#match").addEventListener('click', function(){
         document.querySelector(".tv-Channels").style.display='none';
         document.querySelector(".match-list").style.display="block";
+        document.querySelector(".all-match-list").style.display="block";
         document.querySelector(".adsterReffarl.adstera").style.display="none";
         document.querySelector("div#adstera").style.display="none";
         document.querySelector(".promotionAds").style.display="none";
         document.querySelector(".home-screen").style.display="none";
         document.querySelector("div#postsContainer").style.display="none";
         document.querySelector(".min-Setting").style.display="none";
+
+        function all_match_upcoming() {
+
+          function Match_lists_all() {
+
+              // Initialize Firebase
+              const app = initializeApp(firebaseConfig);
+              const db = getDatabase(app);
+
+              get(ref(db, "matchListUpcoming"))
+                  .then((snapshot) => {
+
+                      if (!snapshot.exists()) return;
+
+                      const allValues = snapshot.val();
+
+                      const container = document.querySelector(".all-match-list");
+                      container.innerHTML = "";
+
+                      for (const id in allValues) {
+
+                          const post = allValues[id];
+
+                          container.innerHTML += `
+                              <div class="all-match-list-dtls">
+
+                                  <div class="team-dtls">
+                                    <div class="times">
+
+                                      <div class="team-1-head">
+                                        <div class="team-1">${post.teame_1}</div>
+                                        <div class="date">${post.date}</div>
+                                      </div>
+
+                                      <div class="match-type-img">
+                                        <img src="${post.match_logo}">
+                                      </div>
+
+                                      <div class="vs-head">
+                                        <div class="vs">VS</div>
+                                        <div class="time">${post.match_type}</div>
+                                      </div>
+
+                                      <div class="team-2-head">
+                                        <div class="team-2">${post.teame_2}</div>
+                                        <div class="remaining"
+                                          data-date="${post.date}"
+                                          data-time="${post.time}">
+                                          Loading...
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                  </div>
+
+                              </div>
+                          `;
+                      }
+
+                      startAllCountdowns();
+
+                  });
+
+          }
+
+
+          // =============================
+          // Countdown
+          // =============================
+
+          function startAllCountdowns() {
+
+              if (window.matchCountdown) {
+                  clearInterval(window.matchCountdown);
+              }
+
+              function update() {
+
+                  document.querySelectorAll(".remaining").forEach(item => {
+
+                      const date = item.dataset.date.trim();
+                      let time = item.dataset.time.trim().toUpperCase();
+                      
+
+                      const [year, month, day] = date.split("-").map(Number);
+
+                      let hour = 0;
+                      let minute = 0;
+
+                      // 12 Hour Format (01:00 PM)
+                      if (time.includes("AM") || time.includes("PM")) {
+
+                          const isPM = time.includes("PM");
+
+                          time = time.replace("AM", "").replace("PM", "").trim();
+
+                          [hour, minute] = time.split(":").map(Number);
+
+                          if (isPM && hour !== 12) hour += 12;
+                          if (!isPM && hour === 12) hour = 0;
+
+                      } else {
+
+                          // 24 Hour Format (13:00)
+                          [hour, minute] = time.split(":").map(Number);
+
+                      }
+
+                      const target = new Date(year, month - 1, day, hour, minute, 0);
+
+                      let diff = target.getTime() - Date.now();
+
+                      if (diff <= 0) {
+                          item.innerHTML = "LIVE NOW";
+                          return;
+                      }
+
+                      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                      diff %= (1000 * 60 * 60 * 24);
+
+                      const hours = Math.floor(diff / (1000 * 60 * 60));
+                      diff %= (1000 * 60 * 60);
+
+                      const minutes = Math.floor(diff / (1000 * 60));
+                      diff %= (1000 * 60);
+
+                      const seconds = Math.floor(diff / 1000);
+
+                      item.innerHTML =
+                          `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                  });
+
+              }
+
+              update();
+
+              window.matchCountdown = setInterval(update, 1000);
+          }
+
+          Match_lists_all();
+      }
+
+      all_match_upcoming();
+
       });
     }matchList();
 
@@ -1706,49 +1833,18 @@ function displayPosts() {
     });
 
     // all_match_list////
-    function all_match_list(){
-      document.querySelectorAll(".Match_lists").forEach(e=>{
-        e.addEventListener('click', function(){
-          document.querySelector(".all-match-list").style.display='block';
-          document.querySelector(".liveEvents").style.display='none';
-          document.querySelector(".tv-Channels").style.display='none';
+    // function all_match_list(){
+    //   document.querySelectorAll(".Match_lists").forEach(e=>{
+    //     e.addEventListener('click', function(){
+    //       document.querySelector(".all-match-list").style.display='block';
+    //       document.querySelector(".liveEvents").style.display='none';
+    //       document.querySelector(".tv-Channels").style.display='none';
 
-          //March_lists_all///
-          function March_lists_all() {
-            // Initialize Firebase
-              const app = initializeApp(firebaseConfig);
-              const db = getDatabase(app);
-
-              const values = e.children[1].value;
-              
-              const dbRef = ref(db);
-              get(child(dbRef, values + '/'))
-                .then((snapshot) => {
-                  if (snapshot.exists()) {
-                    const allValues = snapshot.val();
-                    // Example: Loop through all posts and print titles
-                    document.querySelector(".all-match-list").innerHTML = '';
-                    for (const id in allValues) {
-                      const post = allValues[id];
-                      document.querySelector(".all-match-list").innerHTML += `
-                        <div class="all-match-list-dtls">
-                          <div class="team-dtls">
-                            <div class="team-1">${post.teame_1}</div>
-                            <div class="vs">VS</div>
-                            <div class="team-2">${post.teame_2}</div>
-                          </div>
-                          <div class="times">
-                            <div class="date">${post.date}</div>
-                            <div class="time">${post.time}</div>
-                          </div>
-                        </div>`;
-                      }
-                    }
-                  });
-          }March_lists_all();  
-        })
-      })
-    }all_match_list();
+          
+        
+    //     })
+    //   })
+    // }all_match_list();
 
 
     // all_match_list////
@@ -2150,7 +2246,6 @@ function displayPosts() {
         }
       });
     }
-    noElements();
   </script>
 </body>
 </html>
