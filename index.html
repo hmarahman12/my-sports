@@ -91,6 +91,13 @@
     .match-results .match-result .vs{
       font-size: 15px;
     }
+    .match-results {
+      height: 400px;
+      overflow: auto;
+    }
+    .match-results::-webkit-scrollbar{
+      width: 0;
+    }
 
     span.match-win {
       color: black;
@@ -350,10 +357,19 @@
   }
 
   .match-list {
+    height: 400px;
     display: flex;
     align-items: center;
     margin: auto;
     text-align: center;
+  }
+
+  .all-match-list {
+    height: 100%;
+    overflow: auto;
+  }
+  .all-match-list::-webkit-scrollbar{
+    width: 0;
   }
   .match-list div {
     display: inline;
