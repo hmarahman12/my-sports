@@ -485,7 +485,7 @@ document.querySelector("i#score").addEventListener('click', function(){
               <option value="ipl">IPL</option>
               <option value="bpl">BPL</option>
               <option value="leg">LUEG</option>
-              <option value="fifa">FIFA</option>
+              <option value="football">Football</option>
             </select>
             <input id="teame_1" type="text" placeholder="Teame 1" required>
             <input id="teame_2" type="text" placeholder="Teame 2" required>
@@ -570,12 +570,12 @@ document.querySelector("i#score").addEventListener('click', function(){
                   date : date,
                   time : time
                 });
-              }else if(match_type == "fifa"){
+              }else if(match_type == "football"){
                 set(newPostRef, {
                   teame_1 : teame_1,
                   teame_2 : teame_2,
                   match_type : match_type,
-                  match_logo : 'https://upload.wikimedia.org/wikipedia/en/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png',
+                  match_logo : 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L2pvYjY4MS0wMDYwLXAucG5n.png',
                   date : date,
                   time : time
                 });
@@ -768,7 +768,10 @@ document.querySelector("#match-result").addEventListener('click', function(){
           <a href=""><img id="backButton" src="https://static.vecteezy.com/system/resources/previews/020/998/055/non_2x/rounded-back-icon-element-free-png.png" alt=""></a>
           <div class="upload-head">
             <h3>Match Result</h3>
-            <input id="title" type="text" placeholder="Match Type" required>
+            <select id="match_type">
+              <option value="cricket">CRICKET</option>
+              <option value="football">FOOTBALL</option>
+            </select>
             <input id="teame-1" type="text" placeholder="Teame 1" required>
             <input id="teame-2" type="text" placeholder="Teame 2" required>
             <input id="matchWin" type="text" placeholder="Win Type" required>
@@ -780,29 +783,42 @@ document.querySelector("#match-result").addEventListener('click', function(){
         </div>`;
       ////////////////////////Submited///////////////////////
       document.querySelector("input#submit").addEventListener ('click', function(){
-        const title = document.querySelector("input#title").value;
+        const match_type = document.querySelector("#match_type").value;
         const teame1 = document.querySelector("input#teame-1").value;
         const teame2 = document.querySelector("input#teame-2").value;
         const winType = document.querySelector("input#matchWin").value;
         const resltTime = document.querySelector("input#resltTime").value;
 
 
-        if(!title == "" || !teame1 == "" || !teame2 == "" || !winType == "" || !resltTime == ""){
+        if(!teame1 == "" || !teame2 == "" || !winType == "" || !resltTime == ""){
           setTimeout(() => {
             document.querySelector(".sc").innerHTML = "Sucssfully";
-            document.querySelector("input#title").value = "";
             document.querySelector("input#teame-1").value = "";
             document.querySelector("input#teame-2").value = "";
             document.querySelector("input#matchWin").value = "";
             document.querySelector("input#resltTime").value = "";
 
-            set(ref(db, "MatchResults/" + title),{
-              matchType : title,
-              teame1 : teame1,
-              teame2 : teame2,
-              winType : winType,
-              matchResultTime : resltTime
-            })
+            const newPostRef = push(ref(db, "MatchResults"));
+
+              if(match_type == "cricket"){
+                set(newPostRef, {
+                  teame_1 : teame1,
+                  teame_2 : teame2,
+                  match_type : match_type,
+                  match_logo : 'https://cdn.vectorstock.com/i/500p/77/52/cricket-player-batting-cartoon-vector-57967752.jpg',
+                  winType : winType,
+                  matchResultTime : resltTime
+                });
+              }else if(match_type == "football"){
+                set(newPostRef, {
+                  teame_1 : teame1,
+                  teame_2 : teame2,
+                  match_type : match_type,
+                  match_logo : 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA3L2pvYjY4MS0wMDYwLXAucG5n.png',
+                  winType : winType,
+                  matchResultTime : resltTime
+                });
+              }
 
           }, 2000);
           setTimeout(() => {
@@ -966,7 +982,7 @@ function RetData() {
           // console.log(Object.keys(allValues).length);
           document.querySelector("span.count").innerHTML = `${Object.keys(allValues).length}`;
         } else {
-          console.log("No data available");
+          // console.log("No data available");
         }
       })
       .catch((error) => {
@@ -983,7 +999,7 @@ function RetData() {
           // console.log(Object.keys(allValues).length);
           document.querySelector("span.count.y").innerHTML = `${Object.keys(allValues).length}`;
         } else {
-          console.log("No data available");
+          // console.log("No data available");
         }
       })
       .catch((error) => {
