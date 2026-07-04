@@ -89,9 +89,7 @@
       font-size: 10px;
     }
     .match-results .match-result .vs{
-      font-size: 10px;
-      font-family: unset;
-      font-weight: unset;
+      font-size: 15px;
     }
 
     span.match-win {
@@ -99,10 +97,27 @@
       font-size: 12px;
     }
     span.match-win-date {
-      font-size: 10px;
-      position: absolute;
-      right: 2px;
-      bottom: 2px;
+      font-size: 15px;
+    }
+
+    .match-result {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .matchlogo {
+        width: 35px;
+        height: 35px;
+    }
+
+    .matchlogo img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .teames {
+        font-size: 20px;
     }
     .adsContainer .itemse {
     width: 100%;
@@ -839,7 +854,7 @@ button:hover{
   <audio id="notifSound" src="https://www.myinstants.com/media/sounds/notification.mp3" preload="auto"></audio>
 
   <!-- Adsterra Ads -->
-  <div class="adsterReffarl adstera">
+  <div class="adsterReffarl adstera" style="display: none;">
     <a target="_blank" href="https://beta.publishers.adsterra.com/referral/6bRS6rSK1q" rel="nofollow">
       <img src="https://landings-cdn.adsterratech.com/referralBanners/gif/468x60_adsterra_reff.gif" alt="banner" />
     </a>
@@ -1251,35 +1266,52 @@ button:hover{
 
 
   //Match Results
-  function match_Results(){
-    document.querySelector(".top-bar div.match-result").addEventListener('click', function(){
-      document.querySelector(".match-results").classList.toggle('active');
+  function match_Results() {
+    document.querySelector(".top-bar div.match-result").addEventListener("click", function () {
+
+      document.querySelector(".match-results").classList.toggle("active");
+
       const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const dbRef = ref(db);
-          get(child(dbRef,'MatchResults/'))
-            .then((snapshot) => {
-              if (snapshot.exists()) {
-                const allValues = snapshot.val();
-                // Example: Loop through all posts and print titles
-                document.querySelector(".match-results").innerHTML = '';
-                for (const id in allValues) {
-                  const matchResult = allValues[id];
-                  document.querySelector(".match-results").innerHTML += `
-                  <div class="match-result">
-                    <div class="teames">
-                      <div class="teame-1">${matchResult.teame1}</div>
-                      <div class="vs">vs</div>
-                      <div class="teame-2">${matchResult.teame2}</div>
-                    </div>
-                    <span class="match-win">${matchResult.winType}</span>
-                    <span class="match-win-date">${matchResult.matchResultTime}</span>
-                  </div>`;
-                }
-              }
-          });
-    })
-  }match_Results();
+      const db = getDatabase(app);
+
+      get(ref(db, "MatchResults"))
+        .then((snapshot) => {
+
+          if (!snapshot.exists()) return;
+
+          const allValues = snapshot.val();
+          const container = document.querySelector(".match-results");
+
+          container.innerHTML = "";
+
+          // Last post → First post
+          Object.keys(allValues)
+            .reverse()
+            .forEach((id) => {
+
+              const matchResult = allValues[id];
+
+              container.innerHTML += `
+                <div class="match-result">
+                  <div class="teames">
+                    <div class="teame-1">${matchResult.teame_1}</div>
+                    <div class="vs">vs</div>
+                    <div class="teame-2">${matchResult.teame_2}</div>
+                  </div>
+                  <div class="matchlogo"><img src="${matchResult.match_logo}"></div>
+                  <span class="match-win">${matchResult.winType}</span>
+                  <span class="match-win-date">${matchResult.matchResultTime}</span>
+                </div>
+              `;
+            });
+
+        })
+        .catch(console.error);
+
+    });
+  }
+
+  match_Results();
 
     ///Video players////
 function displayPosts() {
